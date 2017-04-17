@@ -1,3 +1,3 @@
-Python±à³Ì´ÓÈëÃÅµ½Êµ¼ù
-ÏîÄ¿1 ÍâÐÇÈËÈëÇÖ
-ÒÀÀµ¿â£ºPygame
+Pythonç¼–ç¨‹ä»Žå…¥é—¨åˆ°å®žè·µ
+é¡¹ç›®1 å¤–æ˜Ÿäººå…¥ä¾µ
+ä¾èµ–åº“ï¼šPygame
