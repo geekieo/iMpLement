@@ -1,2 +1,5 @@
 #!/usr/bin/env python
-print('hello, world')
+import pygame as pg
+
+print(pg.ver)
+pg.init()
