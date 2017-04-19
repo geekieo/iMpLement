@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-#coding=utf-8
+# -*- coding: utf-8 -*-
 import sys
 import pygame
 
@@ -12,8 +12,8 @@ def run_game():
     # 初始化游戏并创建屏幕对象
     pygame.init()
     ai_settings = Settings()
-    screen = pygame.display.set_mode(
-        (ai_settings.screen_width, ai_settings.screen_height))
+    screen = pygame.display.set_mode((ai_settings.screen_width,
+                                      ai_settings.screen_height))
     pygame.display.set_caption("Alien Invasion")
 
     #创建一艘飞船
