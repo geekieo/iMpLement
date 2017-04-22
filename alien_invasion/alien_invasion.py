@@ -22,7 +22,7 @@ def run_game():
 
     # 开始游戏主循环
     while True:
-        gf.check_events()
+        gf.check_events(ship)
         gf.update_screen(ai_settings, screen, ship)
         # 让最近的屏幕可见
         pygame.display.flip()
