@@ -31,11 +31,11 @@ class Ship():
         '''根据移动状态标志调整飞船位置，参考系原点在左上角'''
         if self.moving_right:
             self.rect.centerx += 1
-        elif self.moving_left:
+        if self.moving_left:
             self.rect.centerx -= 1
-        elif self.moving_up:
+        if self.moving_up:
             self.rect.centery -= 1
-        elif self.moving_down:
+        if self.moving_down:
             self.rect.centery += 1
 
     def blitme(self):
