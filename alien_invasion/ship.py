@@ -28,7 +28,8 @@ class Ship():
         self.moving_down = False
 
     def update(self):
-        '''根据移动状态标志调整飞船位置，参考系原点在左上角'''
+        '''根据移动状态标志调整飞船位置，参考系原点在左上角，
+        位置调整指令存在并发可能，故用 if 而非 elif'''
         if self.moving_right:
             self.rect.centerx += 1
         if self.moving_left:

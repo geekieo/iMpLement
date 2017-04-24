@@ -17,16 +17,16 @@ def check_events(ship):
                 ship.moving_right = True
             elif event.key == pygame.K_LEFT:
                 ship.moving_left = True
-            if event.key == pygame.K_UP:
+            elif event.key == pygame.K_UP:
                 ship.moving_up = True
             elif event.key == pygame.K_DOWN:
                 ship.moving_down = True
         elif event.type == pygame.KEYUP:
             if event.key == pygame.K_RIGHT:
                 ship.moving_right = False
-            if event.key == pygame.K_LEFT:
+            elif event.key == pygame.K_LEFT:
                 ship.moving_left = False
-            if event.key == pygame.K_UP:
+            elif event.key == pygame.K_UP:
                 ship.moving_up = False
             elif event.key == pygame.K_DOWN:
                 ship.moving_down = False
