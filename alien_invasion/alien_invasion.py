@@ -18,7 +18,7 @@ def run_game():
     pygame.display.set_caption("Alien Invasion")
 
     # 创建一艘飞船
-    ship = Ship(screen)
+    ship = Ship(screen,ai_settings)
 
     # 开始游戏主循环
     while True:
@@ -29,8 +29,8 @@ def run_game():
         gameFunc.update_screen(ai_settings, screen, ship)
         # 绘制屏幕
         pygame.display.flip()
-        # 延迟执行下一循环，限制最高帧数在 30 FPS 左右
-        pygame.time.delay(33)
+        # 延迟执行下一循环
+        pygame.time.delay(23)
 
 
 run_game()
