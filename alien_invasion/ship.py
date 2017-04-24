@@ -37,13 +37,13 @@ class Ship():
         '''根据移动状态标志调整飞船位置，参考系原点在左上角，'''
         # 更新ship暂存的center值，而不是ship.rect的center值
         # 位置调整指令存在并发可能，故用 if 而非 elif
-        if self.moving_right:
+        if self.moving_right and self.rect.right < self.screen_rect.right:
             self.centerx += self.ai_setting.ship_speed_factor
-        if self.moving_left:
+        if self.moving_left and self.rect.left > self.screen_rect.left:
             self.centerx -= self.ai_setting.ship_speed_factor
-        if self.moving_up:
+        if self.moving_up and self.rect.top > self.screen_rect.top:
             self.centery -= self.ai_setting.ship_speed_factor
-        if self.moving_down:
+        if self.moving_down and self.rect.bottom < self.screen_rect.bottom:
             self.centery += self.ai_setting.ship_speed_factor
         # 暂存中间值为浮点数，整数部分传给rect
         self.rect.centerx = self.centerx
