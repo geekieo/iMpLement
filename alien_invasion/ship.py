@@ -24,14 +24,19 @@ class Ship():
         # 移动状态标志
         self.moving_right = False
         self.moving_left = False
+        self.moving_up = False
+        self.moving_down = False
 
     def update(self):
-        '''根据移动状态标志调整飞船位置'''
+        '''根据移动状态标志调整飞船位置，参考系原点在左上角'''
         if self.moving_right:
             self.rect.centerx += 1
         elif self.moving_left:
             self.rect.centerx -= 1
-        elif
+        elif self.moving_up:
+            self.rect.centery -= 1
+        elif self.moving_down:
+            self.rect.centery += 1
 
     def blitme(self):
         """在指定位置绘制飞船，即在rect位置绘制飞船图像"""
