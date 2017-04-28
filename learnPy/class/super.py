@@ -1,4 +1,6 @@
-'''multiple inheritance'''
+'''multiple inheritance 
+super()方法 和 主动初始化父类 混用的不良结果
+'''
 class A(object):
     def __init__(self):
         print("enter A")
