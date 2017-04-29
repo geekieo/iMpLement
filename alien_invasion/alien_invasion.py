@@ -6,7 +6,7 @@ import pygame
 from settings import Settings
 from ship import Ship
 import game_functions as gameFunc
-
+from pygame.sprite import Group
 
 def run_game():
 
@@ -20,17 +20,20 @@ def run_game():
     # 创建一艘飞船
     ship = Ship(screen,ai_settings)
 
+    #创建一个用于存储子弹的编组
+    bullets = Group()
+
     # 开始游戏主循环
     while True:
-        gameFunc.check_events(ship)
+        gameFunc.check_events(ai_settings, screen, ship, bullets)
         ship.update()
-
+        bullets.update()
         # 更新屏幕
-        gameFunc.update_screen(ai_settings, screen, ship)
+        gameFunc.update_screen(ai_settings, screen, ship, bullets)
         # 绘制屏幕
         pygame.display.flip()
         # 延迟执行下一循环
-        pygame.time.delay(23)
+        pygame.time.delay(20)
 
 
 run_game()
