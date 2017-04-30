@@ -28,12 +28,18 @@ def run_game():
         gameFunc.check_events(ai_settings, screen, ship, bullets)
         ship.update()
         bullets.update()
+        #删除消失的子弹
+        for bullet in bullets:
+            if bullet.rect.bottom <= 0:
+                bullets.remove(bullet)
+        print(len(bullets))
+
         # 更新屏幕
         gameFunc.update_screen(ai_settings, screen, ship, bullets)
         # 绘制屏幕
         pygame.display.flip()
         # 延迟执行下一循环
-        pygame.time.delay(20)
+        pygame.time.delay(10)
 
 
 run_game()
