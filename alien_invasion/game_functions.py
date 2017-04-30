@@ -54,3 +54,14 @@ def update_screen(ai_settings, screen, ship, bullets):
     for bullet in bullets.sprites():
         bullet.draw_bullet()
     ship.blitme()
+
+def update_bullets(bullets):
+    '''更新子弹位置，并删除消失子弹'''
+    #更新子弹位置
+    bullets.update()
+    #删除消失的子弹
+    for bullet in bullets:
+        if bullet.rect.bottom <= 0:
+            bullets.remove(bullet)
+    print(len(bullets))
+    
