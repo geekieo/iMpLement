@@ -8,6 +8,7 @@ from ship import Ship
 import game_functions as gameFunc
 from pygame.sprite import Group
 
+
 def run_game():
 
     # 初始化游戏并创建屏幕对象
@@ -18,9 +19,9 @@ def run_game():
     pygame.display.set_caption("Alien Invasion")
 
     # 创建一艘飞船
-    ship = Ship(screen,ai_settings)
+    ship = Ship(screen, ai_settings)
 
-    #创建一个用于存储子弹的编组
+    # 创建一个用于存储子弹的编组
     bullets = Group()
 
     # 开始游戏主循环
