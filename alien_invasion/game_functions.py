@@ -13,6 +13,7 @@ time_start = {}
 
 
 def timing(event, time_start):
+    '''长按esc计时退出'''
     time_end = time_start['esc'] + PRESS_WAITING_TIME
     time_now = pygame.time.get_ticks()
     while event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
