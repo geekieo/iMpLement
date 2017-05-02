@@ -24,7 +24,7 @@ def run_game():
     aliens = Group()
 
     # 创建外星人群
-    gameFunc.create_fleet(ai_settings, screen, aliens)
+    gameFunc.create_fleet(ai_settings, screen, aliens, ship)
 
     # 开始游戏主循环
     while True:
