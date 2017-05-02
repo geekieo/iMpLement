@@ -6,10 +6,20 @@ import sys
 import pygame
 from bullet import Bullet
 
-#长按退出倒计时
-PRESS_WAITING_TIME = 2000 
-#计时列表
-time_start={}
+# 长按退出倒计时
+PRESS_WAITING_TIME = 2000
+# 计时列表
+time_start = {}
+
+
+def timing(event, time_start):
+    time_end = time_start['esc'] + PRESS_WAITING_TIME
+    time_now = pygame.time.get_ticks()
+    while event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+        time_now = pygame.time.get_ticks()
+        if time_now > time_end:
+            sys.exit()
+
 
 def check_keydown_events(event, ai_settings, screen, ship, bullets):
     '''响应按键按下'''
@@ -25,8 +35,9 @@ def check_keydown_events(event, ai_settings, screen, ship, bullets):
         fire_bullet(ai_settings, screen, ship, bullets)
     elif event.key == pygame.K_ESCAPE:
         esc_time_start = pygame.time.get_ticks()
-        print(esc_time_start)
-        time_start['esc']=esc_time_start
+        time_start['esc'] = esc_time_start
+        timing(event, time_start)
+
 
 def check_keyup_events(event, ship):
     '''响应按键松开'''
@@ -38,12 +49,6 @@ def check_keyup_events(event, ship):
         ship.moving_up = False
     elif event.key == pygame.K_DOWN:
         ship.moving_down = False
-    elif event.key == pygame.K_ESCAPE:
-        esc_time_end = pygame.time.get_ticks()
-        time = esc_time_end - time_start['esc']
-        print(time)
-        if time > PRESS_WAITING_TIME:
-            sys.exit()
 
 
 def check_events(ai_settings, screen, ship, bullets):
