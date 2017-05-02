@@ -6,6 +6,10 @@ import sys
 import pygame
 from bullet import Bullet
 
+#长按退出倒计时
+PRESS_WAITING_TIME = 2000 
+#计时列表
+time_start={}
 
 def check_keydown_events(event, ai_settings, screen, ship, bullets):
     '''响应按键按下'''
@@ -17,9 +21,12 @@ def check_keydown_events(event, ai_settings, screen, ship, bullets):
         ship.moving_up = True
     elif event.key == pygame.K_DOWN:
         ship.moving_down = True
-    if event.key == pygame.K_SPACE:
+    elif event.key == pygame.K_SPACE:
         fire_bullet(ai_settings, screen, ship, bullets)
-
+    elif event.key == pygame.K_ESCAPE:
+        esc_time_start = pygame.time.get_ticks()
+        print(esc_time_start)
+        time_start['esc']=esc_time_start
 
 def check_keyup_events(event, ship):
     '''响应按键松开'''
@@ -31,6 +38,12 @@ def check_keyup_events(event, ship):
         ship.moving_up = False
     elif event.key == pygame.K_DOWN:
         ship.moving_down = False
+    elif event.key == pygame.K_ESCAPE:
+        esc_time_end = pygame.time.get_ticks()
+        time = esc_time_end - time_start['esc']
+        print(time)
+        if time > PRESS_WAITING_TIME:
+            sys.exit()
 
 
 def check_events(ai_settings, screen, ship, bullets):
@@ -52,15 +65,17 @@ def update_screen(ai_settings, screen, ship, bullets):
         bullet.draw_bullet()
     ship.blitme()
 
+
 def update_bullets(bullets):
     '''更新子弹位置，并删除消失子弹'''
-    #更新子弹位置
+    # 更新子弹位置
     bullets.update()
-    #删除消失的子弹
+    # 删除消失的子弹
     for bullet in bullets:
         if bullet.rect.bottom <= 0:
             bullets.remove(bullet)
-    print(len(bullets))
+    # print(len(bullets))
+
 
 def fire_bullet(ai_settings, screen, ship, bullets):
     '''子弹数量未达到限制，就创建一颗子弹'''
@@ -68,4 +83,3 @@ def fire_bullet(ai_settings, screen, ship, bullets):
     if len(bullets) < ai_settings.bullet_allowed:
         new_bullet = Bullet(ai_settings, screen, ship)
         bullets.add(new_bullet)
-    
