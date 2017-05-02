@@ -9,7 +9,7 @@ import pygame
 
 class Ship():
 
-    def __init__(self, screen, ai_settings):
+    def __init__(self, ai_settings, screen):
         """初始化飞船，并设置初始位置"""
         self.screen = screen
         self.ai_setting = ai_settings

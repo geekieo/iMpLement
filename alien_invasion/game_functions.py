@@ -1,5 +1,5 @@
 '''
-事件代码，
+游戏所有事件代码，
 隔离事件，管理循环
 '''
 import sys
@@ -63,14 +63,14 @@ def check_events(ai_settings, screen, ship, bullets):
             check_keyup_events(event, ship)
 
 
-def update_screen(ai_settings, screen, ship, bullets):
-    '''更新图像，并绘制到屏幕'''
+def update_screen(ai_settings, screen, ship, bullets, alien):
+    '''将图像绘制到屏幕'''
     screen.fill(ai_settings.bg_color)
     # 在背景和飞船之间绘制所有子弹
     for bullet in bullets.sprites():
         bullet.draw_bullet()
     ship.blitme()
-
+    alien.blitme()
 
 def update_bullets(bullets):
     '''更新子弹位置，并删除消失子弹'''
