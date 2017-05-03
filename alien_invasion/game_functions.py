@@ -16,8 +16,7 @@ time_start = {}
 def timing(event, time_start):
     '''长按esc计时退出'''
     time_end = time_start['esc'] + PRESS_WAITING_TIME
-    time_now = pygame.time.get_ticks()
-    while event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+    while event.key == pygame.K_ESCAPE:
         time_now = pygame.time.get_ticks()
         if time_now > time_end:
             sys.exit()
@@ -71,9 +70,9 @@ def update_screen(ai_settings, screen, ship, bullets, aliens):
     for bullet in bullets.sprites():
         bullet.draw_bullet()
     ship.blitme()
-    for alien in aliens.sprites():
-        alien.draw_alien()
-    # aliens.draw(screen)
+    # for alien in aliens.sprites():
+    #     alien.draw_alien()
+    aliens.draw(screen)
 
 
 def update_bullets(bullets):
@@ -138,3 +137,24 @@ def create_fleet(ai_settings, screen, aliens, ship):
         # 创建一行外星人
         for alien_cols in range(aliens_cols):
             create_alien(ai_settings, screen, aliens, alien_cols, alien_rows)
+
+
+def check_fleet_edges(ai_settings, aliens):
+    '''任意外星人到达边缘，移动方向改编'''
+    for alien in aliens.sprites():
+        if alien.check_edges():
+            change_fleet_direction(ai_settings, aliens)
+            break
+
+
+def change_fleet_direction(ai_settings, aliens):
+    '''将所有外星人下移，并改变运动方向'''
+    for alien in aliens.sprites():
+        alien.rect.y += ai_settings.fleet_drop_speed_factor
+    ai_settings.fleet_direction *= -1
+
+
+def update_aliens(ai_settings, aliens):
+    '''更新所有外星人的位置'''
+    check_fleet_edges(ai_settings, aliens)
+    aliens.update()

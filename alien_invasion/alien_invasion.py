@@ -31,6 +31,7 @@ def run_game():
         gameFunc.check_events(ai_settings, screen, ship, bullets)
         ship.update()
         gameFunc.update_bullets(bullets)
+        gameFunc.update_aliens(ai_settings, aliens)
         gameFunc.update_screen(ai_settings, screen, ship, bullets, aliens)
         pygame.display.flip()
         # 延迟执行下一循环
