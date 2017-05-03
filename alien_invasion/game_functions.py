@@ -111,7 +111,7 @@ def get_aliens_rows(ai_settings, ship_height, alien_height):
 
 
 def create_alien(ai_settings, screen, aliens, alien_cols, alien_rows):
-    # 创建一个外星人并加入当前行
+    # 创建外星人，并更具行列数设置坐标，存入aliens
     alien = Alien(ai_settings, screen)
 
     alien_width = alien.rect.width
