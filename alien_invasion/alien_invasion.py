@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 import sys
-import pygame
 
+import pygame
+from pygame.sprite import Group
+
+from game_functions import Game_Functions
 from settings import Settings
 from ship import Ship
-from game_functions import Game_Functions
-from pygame.sprite import Group
 
 
 def run_game():
@@ -30,10 +31,11 @@ def run_game():
     # 开始游戏主循环
     while True:
         gf.check_events(ai_settings, screen, ship, bullets)
-        gf.update_timing(ai_settings)
+        gf.update_press_timing(ai_settings)
+        gf.update_fleet_timing(ai_settings, screen, ship, bullets, aliens)
         ship.update()
-        gf.update_bullets(bullets)
-        gf.update_aliens(ai_settings, aliens)
+        gf.update_bullets(bullets, aliens)
+        gf.update_aliens(ai_settings, screen, ship, bullets, aliens)
         gf.update_screen(ai_settings, screen, ship, bullets, aliens)
         pygame.display.flip()
         # 延迟执行下一循环

@@ -7,13 +7,14 @@ class Settings():
         """初始化游戏的设置"""
         # 屏幕初始化
         self.screen_width = 1000
-        self.screen_height = 750
+        self.screen_height = 700
         self.bg_color = (230, 230, 230)
 
         # 计时设置
         self.press_waiting_time = 2000
+        self.update_fleet_waiting_time = 1500
 
-        # 飞船设置
+        # 飞船的设置
         self.ship_speed_factor = 2
 
         # 子弹设置

@@ -3,9 +3,11 @@
 隔离事件，管理循环
 '''
 import sys
+
 import pygame
-from bullet import Bullet
+
 from alien import Alien
+from bullet import Bullet
 
 
 class Game_Functions ():
@@ -14,6 +16,7 @@ class Game_Functions ():
         # 计时列表
         self.time = {}
         self.press_esc = False
+        self.aliens_empty = False
 
     def check_keydown_events(self, event, ai_settings, screen, ship, bullets):
         '''响应按键按下'''
@@ -55,7 +58,7 @@ class Game_Functions ():
             elif event.type == pygame.KEYUP:
                 self.check_keyup_events(event, ship)
 
-    def update_timing(self, ai_settings):
+    def update_press_timing(self, ai_settings):
         '''计时程序'''
         # 长按esc退出
         if self.press_esc == True:
@@ -63,6 +66,17 @@ class Game_Functions ():
             timing = time_now - self.time['esc']
             if timing >= ai_settings.press_waiting_time:
                 sys.exit()
+
+    def update_fleet_timing(self, ai_settings, screen, ship, bullets, aliens):
+        # 删除所有子弹并新建一群外星人
+        if self.aliens_empty == True:
+            # 等待一段时间刷新新外星人
+            time_now = pygame.time.get_ticks()
+            timing = time_now - self.time['aliens_empty']
+            if timing >= ai_settings.update_fleet_waiting_time:
+                bullets.empty()
+                self.create_fleet(ai_settings, screen, aliens, ship)
+                self.aliens_empty = False
 
     def update_screen(self, ai_settings, screen, ship, bullets, aliens):
         '''将图像绘制到屏幕'''
@@ -75,7 +89,7 @@ class Game_Functions ():
         #     alien.draw_alien()
         aliens.draw(screen)
 
-    def update_bullets(self, bullets):
+    def update_bullets(self, bullets, aliens):
         '''更新子弹位置，并删除消失子弹'''
         # 更新子弹位置
         bullets.update()
@@ -83,7 +97,9 @@ class Game_Functions ():
         for bullet in bullets:
             if bullet.rect.bottom <= 0:
                 bullets.remove(bullet)
-        # print(len(bullets))
+        # 检查 bullet 是否击中 alien
+        # 表示若rect重叠，则删除 bullet 和 alien，True，True表示两个都删除    ·
+        collisions = pygame.sprite.groupcollide(bullets, aliens, True, True)
 
     def fire_bullet(self, ai_settings, screen, ship, bullets):
         '''子弹数量未达到限制，就创建一颗子弹'''
@@ -147,7 +163,11 @@ class Game_Functions ():
             alien.rect.y += ai_settings.fleet_drop_speed_factor
         ai_settings.fleet_direction *= -1
 
-    def update_aliens(self, ai_settings, aliens):
+    def update_aliens(self, ai_settings, screen, ship, bullets, aliens):
         '''更新所有外星人的位置'''
         self.check_fleet_edges(ai_settings, aliens)
         aliens.update()
+        if len(aliens) == 0 and self.aliens_empty == False:
+            # 设置两个标记位，异或状态获取等待起始时间
+            self.aliens_empty = True
+            self.time['aliens_empty'] = pygame.time.get_ticks()
