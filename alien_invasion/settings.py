@@ -10,10 +10,10 @@ class Settings():
         self.screen_height = 750
         self.bg_color = (230, 230, 230)
 
-        #系统设置
+        # 计时设置
         self.press_waiting_time = 2000
 
-        # 飞船的设置
+        # 飞船设置
         self.ship_speed_factor = 2
 
         # 子弹设置
@@ -21,10 +21,10 @@ class Settings():
         self.bullet_widdth = 3
         self.bullet_height = 15
         self.bullet_color = 60, 60, 60
-        self.bullet_allowed = 10      
-        
+        self.bullet_allowed = 10
+
         # 外星人设置
         self.alien_speed_factor = 1
-        #右为正方向
+        # 右为正方向
         self.fleet_direction = 1
-        self.fleet_drop_speed_factor= 10
+        self.fleet_drop_speed_factor = 10

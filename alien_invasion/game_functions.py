@@ -7,6 +7,7 @@ import pygame
 from bullet import Bullet
 from alien import Alien
 
+
 class Game_Functions ():
 
     def __init__(self):
@@ -14,16 +15,7 @@ class Game_Functions ():
         self.time = {}
         self.press_esc = False
 
-    def timing(self,event, ai_settings):
-        '''长按esc计时退出'''
-        time_end = self.time_start['esc'] + ai_settings.press_waiting_time
-        if self.press_esc:
-            time_now = pygame.time.get_ticks()
-            if time_now > time_end:
-                sys.exit()
-            pygame.time.wait(10)
-
-    def check_keydown_events(self,event, ai_settings, screen, ship, bullets):
+    def check_keydown_events(self, event, ai_settings, screen, ship, bullets):
         '''响应按键按下'''
         if event.key == pygame.K_RIGHT:
             ship.moving_right = True
@@ -39,8 +31,7 @@ class Game_Functions ():
             self.time['esc'] = pygame.time.get_ticks()
             self.press_esc = True
 
-
-    def check_keyup_events(self,event, ship):
+    def check_keyup_events(self, event, ship):
         '''响应按键松开'''
         if event.key == pygame.K_RIGHT:
             ship.moving_right = False
@@ -53,26 +44,27 @@ class Game_Functions ():
         elif event.key == pygame.K_ESCAPE:
             self.press_esc = False
 
-    def check_events(self,ai_settings, screen, ship, bullets):
+    def check_events(self, ai_settings, screen, ship, bullets):
         '''响应按键和鼠标事件'''
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 sys.exit()
             elif event.type == pygame.KEYDOWN:
-                self.check_keydown_events(event, ai_settings, screen, ship, bullets)
+                self.check_keydown_events(
+                    event, ai_settings, screen, ship, bullets)
             elif event.type == pygame.KEYUP:
                 self.check_keyup_events(event, ship)
 
     def update_timing(self, ai_settings):
         '''计时程序'''
-        #长按esc退出
+        # 长按esc退出
         if self.press_esc == True:
             time_now = pygame.time.get_ticks()
-            timing = time_now-self.time['esc']
+            timing = time_now - self.time['esc']
             if timing >= ai_settings.press_waiting_time:
                 sys.exit()
 
-    def update_screen(self,ai_settings, screen, ship, bullets, aliens):
+    def update_screen(self, ai_settings, screen, ship, bullets, aliens):
         '''将图像绘制到屏幕'''
         screen.fill(ai_settings.bg_color)
         # 在背景和飞船之间绘制所有子弹
@@ -83,8 +75,7 @@ class Game_Functions ():
         #     alien.draw_alien()
         aliens.draw(screen)
 
-
-    def update_bullets(self,bullets):
+    def update_bullets(self, bullets):
         '''更新子弹位置，并删除消失子弹'''
         # 更新子弹位置
         bullets.update()
@@ -94,31 +85,27 @@ class Game_Functions ():
                 bullets.remove(bullet)
         # print(len(bullets))
 
-
-    def fire_bullet(self,ai_settings, screen, ship, bullets):
+    def fire_bullet(self, ai_settings, screen, ship, bullets):
         '''子弹数量未达到限制，就创建一颗子弹'''
         # 创建一个子弹， 并将其加入到编组bullets中
         if len(bullets) < ai_settings.bullet_allowed:
             new_bullet = Bullet(ai_settings, screen, ship)
             bullets.add(new_bullet)
 
-
-    def get_aliens_cols(self,ai_settings, alien_width):
+    def get_aliens_cols(self, ai_settings, alien_width):
         '''计算屏幕一行可容纳多少个外星人'''
         available_space_x = ai_settings.screen_width - 2 * alien_width
         number_cols = int(available_space_x / (2 * alien_width))
         return number_cols
 
-
-    def get_aliens_rows(self,ai_settings, ship_height, alien_height):
+    def get_aliens_rows(self, ai_settings, ship_height, alien_height):
         '''计算屏幕可容纳多少行外星人'''
         available_space_y = (ai_settings.screen_height -
-                            (3 * alien_height) - ship_height)
+                             (3 * alien_height) - ship_height)
         number_rows = int(available_space_y / (2 * alien_height))
         return number_rows
 
-
-    def create_alien(self,ai_settings, screen, aliens, alien_cols, alien_rows):
+    def create_alien(self, ai_settings, screen, aliens, alien_cols, alien_rows):
         # 创建外星人，并更具行列数设置坐标，存入aliens
         alien = Alien(ai_settings, screen)
 
@@ -132,8 +119,7 @@ class Game_Functions ():
 
         aliens.add(alien)
 
-
-    def create_fleet(self,ai_settings, screen, aliens, ship):
+    def create_fleet(self, ai_settings, screen, aliens, ship):
         '''创建外星人群'''
         # 创建一个外星人，并计算一行可容纳多少个外星人
         # 外星人间距为外星人宽度
@@ -145,25 +131,23 @@ class Game_Functions ():
         for alien_rows in range(aliens_rows):
             # 创建一行外星人
             for alien_cols in range(aliens_cols):
-                self.create_alien(ai_settings, screen, aliens, alien_cols, alien_rows)
+                self.create_alien(ai_settings, screen, aliens,
+                                  alien_cols, alien_rows)
 
-
-    def check_fleet_edges(self,ai_settings, aliens):
+    def check_fleet_edges(self, ai_settings, aliens):
         '''任意外星人到达边缘，移动方向改编'''
         for alien in aliens.sprites():
             if alien.check_edges():
                 self.change_fleet_direction(ai_settings, aliens)
                 break
 
-
-    def change_fleet_direction(self,ai_settings, aliens):
+    def change_fleet_direction(self, ai_settings, aliens):
         '''将所有外星人下移，并改变运动方向'''
         for alien in aliens.sprites():
             alien.rect.y += ai_settings.fleet_drop_speed_factor
         ai_settings.fleet_direction *= -1
 
-
-    def update_aliens(self,ai_settings, aliens):
+    def update_aliens(self, ai_settings, aliens):
         '''更新所有外星人的位置'''
         self.check_fleet_edges(ai_settings, aliens)
         aliens.update()
