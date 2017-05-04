@@ -30,6 +30,7 @@ def run_game():
     # 开始游戏主循环
     while True:
         gf.check_events(ai_settings, screen, ship, bullets)
+        gf.update_timing(ai_settings)
         ship.update()
         gf.update_bullets(bullets)
         gf.update_aliens(ai_settings, aliens)

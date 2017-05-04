@@ -11,17 +11,16 @@ class Game_Functions ():
 
     def __init__(self):
         # 计时列表
-        self.time_start = {}
+        self.time = {}
+        self.press_esc = False
 
     def timing(self,event, ai_settings):
         '''长按esc计时退出'''
         time_end = self.time_start['esc'] + ai_settings.press_waiting_time
-        while True:
+        if self.press_esc:
             time_now = pygame.time.get_ticks()
             if time_now > time_end:
                 sys.exit()
-            if event.key != pygame.K_UP:
-                break
             pygame.time.wait(10)
 
     def check_keydown_events(self,event, ai_settings, screen, ship, bullets):
@@ -37,8 +36,8 @@ class Game_Functions ():
         elif event.key == pygame.K_SPACE:
             self.fire_bullet(ai_settings, screen, ship, bullets)
         elif event.key == pygame.K_ESCAPE:
-            time_start['esc'] = pygame.time.get_ticks()
-            self.timing(event, time_start)
+            self.time['esc'] = pygame.time.get_ticks()
+            self.press_esc = True
 
 
     def check_keyup_events(self,event, ship):
@@ -51,7 +50,8 @@ class Game_Functions ():
             ship.moving_up = False
         elif event.key == pygame.K_DOWN:
             ship.moving_down = False
-
+        elif event.key == pygame.K_ESCAPE:
+            self.press_esc = False
 
     def check_events(self,ai_settings, screen, ship, bullets):
         '''响应按键和鼠标事件'''
@@ -63,6 +63,14 @@ class Game_Functions ():
             elif event.type == pygame.KEYUP:
                 self.check_keyup_events(event, ship)
 
+    def update_timing(self, ai_settings):
+        '''计时程序'''
+        #长按esc退出
+        if self.press_esc == True:
+            time_now = pygame.time.get_ticks()
+            timing = time_now-self.time['esc']
+            if timing >= ai_settings.press_waiting_time:
+                sys.exit()
 
     def update_screen(self,ai_settings, screen, ship, bullets, aliens):
         '''将图像绘制到屏幕'''
