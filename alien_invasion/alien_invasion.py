@@ -5,7 +5,7 @@ import pygame
 
 from settings import Settings
 from ship import Ship
-import game_functions as gameFunc
+from game_functions import Game_Functions
 from pygame.sprite import Group
 
 
@@ -22,17 +22,18 @@ def run_game():
     ship = Ship(ai_settings, screen)
     bullets = Group()
     aliens = Group()
+    gf = Game_Functions()
 
     # 创建外星人群
-    gameFunc.create_fleet(ai_settings, screen, aliens, ship)
+    gf.create_fleet(ai_settings, screen, aliens, ship)
 
     # 开始游戏主循环
     while True:
-        gameFunc.check_events(ai_settings, screen, ship, bullets)
+        gf.check_events(ai_settings, screen, ship, bullets)
         ship.update()
-        gameFunc.update_bullets(bullets)
-        gameFunc.update_aliens(ai_settings, aliens)
-        gameFunc.update_screen(ai_settings, screen, ship, bullets, aliens)
+        gf.update_bullets(bullets)
+        gf.update_aliens(ai_settings, aliens)
+        gf.update_screen(ai_settings, screen, ship, bullets, aliens)
         pygame.display.flip()
         # 延迟执行下一循环
         pygame.time.delay(10)

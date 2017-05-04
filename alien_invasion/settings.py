@@ -10,6 +10,9 @@ class Settings():
         self.screen_height = 750
         self.bg_color = (230, 230, 230)
 
+        #系统设置
+        self.press_waiting_time = 2000
+
         # 飞船的设置
         self.ship_speed_factor = 2
 
