@@ -98,6 +98,7 @@ class Game_Functions ():
             if bullet.rect.bottom <= 0:
                 bullets.remove(bullet)
         # 检查 bullet 是否击中 alien
+        # group 和 group 是否碰撞
         # 表示若rect重叠，则删除 bullet 和 alien，True，True表示两个都删除    ·
         collisions = pygame.sprite.groupcollide(bullets, aliens, True, True)
 
@@ -171,3 +172,6 @@ class Game_Functions ():
             # 设置两个标记位，异或状态获取等待起始时间
             self.aliens_empty = True
             self.time['aliens_empty'] = pygame.time.get_ticks()
+        #检测外星人和飞船之间的碰撞，sprite 和 group 是否碰撞
+        if pygame.sprite.spritecollideany(ship, aliens):
+            print('Ship hit!!!')
