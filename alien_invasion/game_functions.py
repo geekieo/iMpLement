@@ -10,6 +10,7 @@ from alien import Alien
 from bullet import Bullet
 from time import sleep
 
+
 class Game_Functions ():
 
     def __init__(self):
@@ -168,9 +169,18 @@ class Game_Functions ():
         '''响应被外星人撞到的飞船'''
         # 将 ships_left 减 1
         stats.ships_left -= 1
-        #创建新飞船
+        # 创建新飞船
         ship.center_ship()
         sleep(0.5)
+
+    def check_aliens_bottom(self, ai_settings, screen, ship, aliens, stats):
+        '''检测外星人是否到达屏幕底端'''
+        screen_rect = screen.get_rect()
+        for alien in aliens.sprites():
+            if alien.rect.bottom >= screen_rect.bottom:
+                # 像飞船撞到外星人一样处理
+                self.ship_hit(ai_settings, ship, stats)
+                break
 
     def update_aliens(self, ai_settings, screen, ship, bullets, aliens, stats):
         '''更新所有外星人的位置'''
@@ -180,8 +190,10 @@ class Game_Functions ():
             # 设置两个标记位，异或状态获取等待起始时间
             self.aliens_empty = True
             self.time['aliens_empty'] = pygame.time.get_ticks()
-        #检测外星人和飞船之间的碰撞，sprite 和 group 是否碰撞
+        # 检测外星人和飞船之间的碰撞，sprite 和 group 是否碰撞
         if pygame.sprite.spritecollideany(ship, aliens):
-            #删除撞到的外星人，不会删除飞船
+            # 删除撞到的外星人，不会删除飞船
             collisions = pygame.sprite.spritecollide(ship, aliens, True)
             self.ship_hit(ai_settings, ship, stats)
+        # 检测外星人是否到达屏幕底端
+        self.check_aliens_bottom(ai_settings, screen, ship, aliens, stats)
