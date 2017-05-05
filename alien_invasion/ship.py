@@ -52,3 +52,10 @@ class Ship():
     def blitme(self):
         """在指定位置绘制飞船，即在rect位置绘制飞船图像"""
         self.screen.blit(self.image, self.rect)
+
+    def center_ship(self):
+        '''在飞船撞到外星人后，飞船位置居中'''
+        self.rect.centerx = self.screen_rect.centerx
+        self.rect.bottom = self.screen_rect.bottom
+        self.centerx = self.rect.centerx
+        self.centery = self.rect.centery

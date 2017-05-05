@@ -8,7 +8,7 @@ import pygame
 
 from alien import Alien
 from bullet import Bullet
-
+from time import sleep
 
 class Game_Functions ():
 
@@ -164,7 +164,15 @@ class Game_Functions ():
             alien.rect.y += ai_settings.fleet_drop_speed_factor
         ai_settings.fleet_direction *= -1
 
-    def update_aliens(self, ai_settings, screen, ship, bullets, aliens):
+    def ship_hit(self, ai_settings, ship, stats):
+        '''响应被外星人撞到的飞船'''
+        # 将 ships_left 减 1
+        stats.ships_left -= 1
+        #创建新飞船
+        ship.center_ship()
+        sleep(0.5)
+
+    def update_aliens(self, ai_settings, screen, ship, bullets, aliens, stats):
         '''更新所有外星人的位置'''
         self.check_fleet_edges(ai_settings, aliens)
         aliens.update()
@@ -174,4 +182,6 @@ class Game_Functions ():
             self.time['aliens_empty'] = pygame.time.get_ticks()
         #检测外星人和飞船之间的碰撞，sprite 和 group 是否碰撞
         if pygame.sprite.spritecollideany(ship, aliens):
-            print('Ship hit!!!')
+            #删除撞到的外星人，不会删除飞船
+            collisions = pygame.sprite.spritecollide(ship, aliens, True)
+            self.ship_hit(ai_settings, ship, stats)
