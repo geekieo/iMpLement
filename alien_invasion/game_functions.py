@@ -66,7 +66,8 @@ class GameFunctions ():
 
     def check_play_button(self, ai_settings, screen, stats, play_button, mouse_x, mouse_y, ship, bullets, aliens):
         '''玩家单击Play按钮开始新的游戏'''
-        if play_button.rect.collidepoint(mouse_x, mouse_y):
+        if play_button.button_alive and play_button.rect.collidepoint(mouse_x, mouse_y):
+            play_button.button_alive = False
             # 重置游戏统计信息
             stats.reset_stats()
             # 设置游戏状态为活动
@@ -75,7 +76,7 @@ class GameFunctions ():
             bullets.empty()
             self.create_fleet(ai_settings, screen, aliens, ship)
             ship.center_ship()
-
+            
     def update_press_timing(self, ai_settings):
         '''计时程序'''
         # 长按esc退出
