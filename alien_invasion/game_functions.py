@@ -3,21 +3,22 @@
 隔离事件，管理循环
 '''
 import sys
+from time import sleep
 
 import pygame
 
 from alien import Alien
 from bullet import Bullet
-from time import sleep
 
 
-class Game_Functions ():
+class GameFunctions ():
 
     def __init__(self):
         # 计时列表
         self.time = {}
         self.press_esc = False
         self.aliens_empty = False
+        self.ship_dead = False
 
     def check_keydown_events(self, event, ai_settings, screen, ship, bullets):
         '''响应按键按下'''
@@ -165,22 +166,29 @@ class Game_Functions ():
             alien.rect.y += ai_settings.fleet_drop_speed_factor
         ai_settings.fleet_direction *= -1
 
-    def ship_hit(self, ai_settings, ship, stats):
+    def ship_hit(self, ship, stats):
         '''响应被外星人撞到的飞船'''
-        # 将 ships_left 减 1
-        stats.ships_left -= 1
-        # 创建新飞船
-        ship.center_ship()
-        sleep(0.5)
+        if stats.ships_left > 0:
+            # 将 ships_left 减 1
+            stats.ships_left -= 1
+            # 创建新飞船
+            ship.center_ship()
+            ship_dead = True
+        else:
+            stats.game_active = False
 
-    def check_aliens_bottom(self, ai_settings, screen, ship, aliens, stats):
+    def check_aliens_bottom(self, screen, aliens, stats):
         '''检测外星人是否到达屏幕底端'''
         screen_rect = screen.get_rect()
-        for alien in aliens.sprites():
-            if alien.rect.bottom >= screen_rect.bottom:
-                # 像飞船撞到外星人一样处理
-                self.ship_hit(ai_settings, ship, stats)
-                break
+        if stats.ships_left > 0:
+            # 删除到达底部的外星人
+            for alien in aliens:
+                if alien.rect.bottom >= screen_rect.bottom:
+                    aliens.remove(alien)
+                     # 将 ships_left 减 1
+                    stats.ships_left -= 1
+        else:
+            stats.game_active = False
 
     def update_aliens(self, ai_settings, screen, ship, bullets, aliens, stats):
         '''更新所有外星人的位置'''
@@ -194,6 +202,6 @@ class Game_Functions ():
         if pygame.sprite.spritecollideany(ship, aliens):
             # 删除撞到的外星人，不会删除飞船
             collisions = pygame.sprite.spritecollide(ship, aliens, True)
-            self.ship_hit(ai_settings, ship, stats)
+            self.ship_hit(ship, stats)
         # 检测外星人是否到达屏幕底端
-        self.check_aliens_bottom(ai_settings, screen, ship, aliens, stats)
+        self.check_aliens_bottom(screen, aliens, stats)
