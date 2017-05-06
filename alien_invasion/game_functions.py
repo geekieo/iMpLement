@@ -49,7 +49,7 @@ class GameFunctions ():
         elif event.key == pygame.K_ESCAPE:
             self.press_esc = False
 
-    def check_events(self, ai_settings, screen, ship, bullets):
+    def check_events(self, ai_settings, screen, ship, bullets, play_button, stats):
         '''响应按键和鼠标事件'''
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -59,6 +59,14 @@ class GameFunctions ():
                     event, ai_settings, screen, ship, bullets)
             elif event.type == pygame.KEYUP:
                 self.check_keyup_events(event, ship)
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                mouse_x, mouse_y = pygame.mouse.get_pos()
+                self.check_play_button(stats, play_button, mouse_x, mouse_y)
+    
+    def check_play_button(self, stats, play_button, mouse_x, mouse_y):
+        '''玩家单击Play按钮开始新的游戏'''
+        if play_button.rect.collidepoint(mouse_x,mouse_y):
+            stats.game_active = True
 
     def update_press_timing(self, ai_settings):
         '''计时程序'''
@@ -80,7 +88,7 @@ class GameFunctions ():
                 self.create_fleet(ai_settings, screen, aliens, ship)
                 self.aliens_empty = False
 
-    def update_screen(self, ai_settings, screen, ship, bullets, aliens):
+    def update_screen(self, ai_settings, screen, ship, bullets, aliens, stats, play_button):
         '''将图像绘制到屏幕'''
         screen.fill(ai_settings.bg_color)
         # 在背景和飞船之间绘制所有子弹
@@ -90,6 +98,9 @@ class GameFunctions ():
         # for alien in aliens.sprites():
         #     alien.draw_alien()
         aliens.draw(screen)
+        if not stats.game_active:
+            play_button.draw_button()
+        pygame.display.flip()
 
     def update_bullets(self, bullets, aliens):
         '''更新子弹位置，并删除消失子弹'''
@@ -185,7 +196,7 @@ class GameFunctions ():
             for alien in aliens:
                 if alien.rect.bottom >= screen_rect.bottom:
                     aliens.remove(alien)
-                     # 将 ships_left 减 1
+                    # 将 ships_left 减 1
                     stats.ships_left -= 1
         else:
             stats.game_active = False
