@@ -38,7 +38,8 @@ def run_game():
 
     # 开始游戏主循环
     while True:
-        gf.check_events(ai_settings, screen, ship, bullets,aliens, play_button, stats)
+        gf.check_events(ai_settings, screen, ship, bullets,
+                        aliens, play_button, stats)
         if stats.game_active == True:
             gf.update_press_timing(ai_settings)
             gf.update_fleet_timing(ai_settings, screen, ship, bullets, aliens)

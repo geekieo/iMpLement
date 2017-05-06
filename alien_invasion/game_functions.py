@@ -68,6 +68,8 @@ class GameFunctions ():
         '''玩家单击Play按钮开始新的游戏'''
         if not stats.game_active:
             if play_button.rect.collidepoint(mouse_x, mouse_y):
+                # 重置游戏设置
+                ai_settings.initialize_dynamic_settings()
                 # 隐藏光标
                 pygame.mouse.set_visible(False)
                 # 重置游戏统计信息
@@ -96,6 +98,8 @@ class GameFunctions ():
             timing = time_now - self.time['aliens_empty']
             if timing >= ai_settings.update_fleet_waiting_time:
                 bullets.empty()
+                # 加快游戏节奏
+                ai_settings.increase_speed()
                 self.create_fleet(ai_settings, screen, aliens, ship)
                 self.aliens_empty = False
 
@@ -112,6 +116,8 @@ class GameFunctions ():
         # 如果游戏为非活动状态，添加开始游戏的按钮
         if not stats.game_active:
             play_button.draw_button()
+            # 显示光标
+            pygame.mouse.set_visible(True)
         pygame.display.flip()
 
     def update_bullets(self, bullets, aliens):
