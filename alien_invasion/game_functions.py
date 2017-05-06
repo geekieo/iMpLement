@@ -49,7 +49,7 @@ class GameFunctions ():
         elif event.key == pygame.K_ESCAPE:
             self.press_esc = False
 
-    def check_events(self, ai_settings, screen, ship, bullets, play_button, stats):
+    def check_events(self, ai_settings, screen, ship, bullets, aliens, play_button, stats):
         '''响应按键和鼠标事件'''
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -61,12 +61,20 @@ class GameFunctions ():
                 self.check_keyup_events(event, ship)
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_x, mouse_y = pygame.mouse.get_pos()
-                self.check_play_button(stats, play_button, mouse_x, mouse_y)
-    
-    def check_play_button(self, stats, play_button, mouse_x, mouse_y):
+                self.check_play_button(
+                    ai_settings, screen, stats, play_button, mouse_x, mouse_y, ship, bullets, aliens)
+
+    def check_play_button(self, ai_settings, screen, stats, play_button, mouse_x, mouse_y, ship, bullets, aliens):
         '''玩家单击Play按钮开始新的游戏'''
-        if play_button.rect.collidepoint(mouse_x,mouse_y):
+        if play_button.rect.collidepoint(mouse_x, mouse_y):
+            # 重置游戏统计信息
+            stats.reset_stats()
+            # 设置游戏状态为活动
             stats.game_active = True
+            aliens.empty()
+            bullets.empty()
+            self.create_fleet(ai_settings, screen, aliens, ship)
+            ship.center_ship()
 
     def update_press_timing(self, ai_settings):
         '''计时程序'''
@@ -98,6 +106,7 @@ class GameFunctions ():
         # for alien in aliens.sprites():
         #     alien.draw_alien()
         aliens.draw(screen)
+        # 如果游戏为非活动状态，添加开始游戏的按钮
         if not stats.game_active:
             play_button.draw_button()
         pygame.display.flip()
