@@ -7,7 +7,6 @@ class Button():
         '''初始化按钮属性'''
         self.screen = screen
         self.screen_rect = screen.get_rect()
-        self.button_alive = False
 
         # 设置按钮的尺寸和其他属性
         self.width, self.height = 200, 50
@@ -32,4 +31,3 @@ class Button():
         # 绘制一个用颜色填充的按钮，再绘制文本
         self.screen.fill(self.button_color,self.rect)
         self.screen.blit(self.msg_image,self.msg_image_rect)
-        self.button_alive = True
