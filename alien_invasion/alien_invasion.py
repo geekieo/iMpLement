@@ -46,7 +46,8 @@ def run_game():
             gf.update_press_timing(ai_settings)
             gf.update_fleet_timing(ai_settings, screen, ship, bullets, aliens)
             ship.update()
-            gf.update_bullets(bullets, aliens)
+            gf.update_bullets(ai_settings, screen, stats,
+                              scoreboard, ship, bullets, aliens)
             gf.update_aliens(ai_settings, screen, ship, bullets, aliens, stats)
         gf.update_screen(ai_settings, screen, ship, bullets,
                          aliens, stats, play_button, scoreboard)

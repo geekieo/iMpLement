@@ -121,7 +121,17 @@ class GameFunctions ():
             pygame.mouse.set_visible(True)
         pygame.display.flip()
 
-    def update_bullets(self, bullets, aliens):
+    def check_bullet_alien_collisions(self, ai_settings, screen, stats, scoreboard, ship, bullets, aliens):
+        # 检查 bullet 是否击中 alien
+        # group 和 group 是否碰撞
+        # 表示若rect重叠，则删除 bullet 和 alien，True，True表示两个都删除
+        collisions = pygame.sprite.groupcollide(bullets, aliens, True, True)
+        if collisions:
+            # 更新计分牌
+            stats.score += ai_settings.alien_points
+            scoreboard.prep_score()
+
+    def update_bullets(self, ai_settings, screen, stats, scoreboard, ship, bullets, aliens):
         '''更新子弹位置，并删除消失子弹'''
         # 更新子弹位置
         bullets.update()
@@ -129,10 +139,8 @@ class GameFunctions ():
         for bullet in bullets:
             if bullet.rect.bottom <= 0:
                 bullets.remove(bullet)
-        # 检查 bullet 是否击中 alien
-        # group 和 group 是否碰撞
-        # 表示若rect重叠，则删除 bullet 和 alien，True，True表示两个都删除    ·
-        collisions = pygame.sprite.groupcollide(bullets, aliens, True, True)
+        self.check_bullet_alien_collisions(
+            ai_settings, screen, stats, scoreboard, ship, bullets, aliens)
 
     def fire_bullet(self, ai_settings, screen, ship, bullets):
         '''子弹数量未达到限制，就创建一颗子弹'''
