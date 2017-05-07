@@ -48,7 +48,8 @@ def run_game():
             ship.update()
             gf.update_bullets(ai_settings, screen, stats,
                               scoreboard, ship, bullets, aliens)
-            gf.update_aliens(ai_settings, screen, ship, bullets, aliens, stats)
+            gf.update_aliens(ai_settings, screen, stats, scoreboard,
+                             ship, bullets, aliens)
         gf.update_screen(ai_settings, screen, ship, bullets,
                          aliens, stats, play_button, scoreboard)
         # 延迟执行下一循环

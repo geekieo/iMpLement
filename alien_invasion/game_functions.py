@@ -121,15 +121,10 @@ class GameFunctions ():
             pygame.mouse.set_visible(True)
         pygame.display.flip()
 
-    def check_bullet_alien_collisions(self, ai_settings, screen, stats, scoreboard, ship, bullets, aliens):
-        # 检查 bullet 是否击中 alien
-        # group 和 group 是否碰撞
-        # 表示若rect重叠，则删除 bullet 和 alien，True，True表示两个都删除
-        collisions = pygame.sprite.groupcollide(bullets, aliens, True, True)
-        if collisions:
+    def update_score(self, ai_settings, screen, stats, scoreboard):
             # 更新计分牌
-            stats.score += ai_settings.alien_points
-            scoreboard.prep_score()
+        stats.score += ai_settings.alien_points
+        scoreboard.prep_score()
 
     def update_bullets(self, ai_settings, screen, stats, scoreboard, ship, bullets, aliens):
         '''更新子弹位置，并删除消失子弹'''
@@ -139,8 +134,12 @@ class GameFunctions ():
         for bullet in bullets:
             if bullet.rect.bottom <= 0:
                 bullets.remove(bullet)
-        self.check_bullet_alien_collisions(
-            ai_settings, screen, stats, scoreboard, ship, bullets, aliens)
+        # 检查 bullet 是否击中 alien
+        # group 和 group 是否碰撞
+        # 表示若rect重叠，则删除 bullet 和 alien，True，True表示两个都删除
+        collisions = pygame.sprite.groupcollide(bullets, aliens, True, True)
+        if collisions:
+            self.update_score(ai_settings, screen, stats, scoreboard)
 
     def fire_bullet(self, ai_settings, screen, ship, bullets):
         '''子弹数量未达到限制，就创建一颗子弹'''
@@ -204,8 +203,9 @@ class GameFunctions ():
             alien.rect.y += ai_settings.fleet_drop_speed_factor
         ai_settings.fleet_direction *= -1
 
-    def ship_hit(self, ship, stats):
+    def ship_hit(self, ai_settings, screen, stats, scoreboard, ship):
         '''响应被外星人撞到的飞船'''
+        self.update_score(ai_settings, screen, stats, scoreboard)
         if stats.ships_left > 0:
             # 将 ships_left 减 1
             stats.ships_left -= 1
@@ -228,7 +228,8 @@ class GameFunctions ():
         else:
             stats.game_active = False
 
-    def update_aliens(self, ai_settings, screen, ship, bullets, aliens, stats):
+    def update_aliens(self, ai_settings, screen, stats, scoreboard,
+                      ship, bullets, aliens):
         '''更新所有外星人的位置'''
         self.check_fleet_edges(ai_settings, aliens)
         aliens.update()
@@ -238,8 +239,8 @@ class GameFunctions ():
             self.time['aliens_empty'] = pygame.time.get_ticks()
         # 检测外星人和飞船之间的碰撞，sprite 和 group 是否碰撞
         if pygame.sprite.spritecollideany(ship, aliens):
-            # 删除撞到的外星人，不会删除飞船
+            # 删除撞到的外星人，不删除飞船
             collisions = pygame.sprite.spritecollide(ship, aliens, True)
-            self.ship_hit(ship, stats)
+            self.ship_hit(ai_settings, screen, stats, scoreboard, ship)
         # 检测外星人是否到达屏幕底端
         self.check_aliens_bottom(screen, aliens, stats)
