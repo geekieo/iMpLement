@@ -20,7 +20,10 @@ class Scoreboard():
 
     def prep_score(self):
         '''将得分转换为一幅渲染的图像'''
-        score_str = str(self.stats.score)
+        # 得分圆整到最近的10的倍数
+        rounded_score = int(round(self.stats.score, -1))
+        # 字符串格式设置指令，将数值转换成字符串时插入逗号
+        score_str = "{:,}".format(rounded_score)
         self.score_image = self.font.render(
             score_str, True, self.text_color, self.ai_settings.bg_color)
 
@@ -31,4 +34,4 @@ class Scoreboard():
 
     def draw_score(self):
         '''将得分图片渲染到屏幕上'''
-        self.screen.blit(self.score_image,self.score_rect)
+        self.screen.blit(self.score_image, self.score_rect)

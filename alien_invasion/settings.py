@@ -28,8 +28,10 @@ class Settings():
         # fleet_direction 为1表示向右,-1表示向左
         self.fleet_direction = 1
 
-        # 以什么速度加快游戏节奏
-        self.speedup_scale = 1.5
+        # 加快游戏速度倍数
+        self.speedup_scale = 1.1
+        # 得分提高速度
+        self.scoreup_scale = 1.5
 
         self.initialize_dynamic_settings()
 
@@ -45,4 +47,4 @@ class Settings():
         self.ship_speed_factor *= self.speedup_scale
         self.bullet_speed_factor *= self.speedup_scale
         self.alien_speed_factor *= self.speedup_scale
-        self.alien_points = int(self.alien_points*self.speedup_scale)
+        self.alien_points = int(self.alien_points*self.scoreup_scale)
