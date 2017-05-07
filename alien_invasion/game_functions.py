@@ -103,7 +103,7 @@ class GameFunctions ():
                 self.create_fleet(ai_settings, screen, aliens, ship)
                 self.aliens_empty = False
 
-    def update_screen(self, ai_settings, screen, ship, bullets, aliens, stats, play_button):
+    def update_screen(self, ai_settings, screen, ship, bullets, aliens, stats, play_button, scoreboard):
         '''将图像绘制到屏幕'''
         screen.fill(ai_settings.bg_color)
         # 在背景和飞船之间绘制所有子弹
@@ -113,6 +113,7 @@ class GameFunctions ():
         # for alien in aliens.sprites():
         #     alien.draw_alien()
         aliens.draw(screen)
+        scoreboard.draw_score()
         # 如果游戏为非活动状态，添加开始游戏的按钮
         if not stats.game_active:
             play_button.draw_button()
