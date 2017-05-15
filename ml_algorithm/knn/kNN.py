@@ -21,23 +21,29 @@ def createDataSet():
     labels = ['A', 'A', 'B', 'B']
     return group, labels
 
-# classify using kNN
+# classify using kNN 分类器实现
 
 
 def kNNClassify(inData, dataSet, labels, k):
+    # the number of row
     dataSetSize = dataSet.shape[0]
-    # 1 距离计算 三行
-    diffMat = tile(inData, (dataSetSize, 1)) - dataSet
-    sqDiffMat = diffMat**2
+    # 1 calculate Euclidean distance
+    # 通过重复迭代构造训练集矩阵
+    diffMat = tile(inData, (dataSetSize, 1)) - dataSet  # subtract element-wise
+    sqDiffMat = diffMat**2                              # squared for the subtract
+    # sum is performed by row
     sqDistances = sqDiffMat.sum(axis=1)
     distances = sqDistances**0.5
+    # 2 sort the distance  两行
+    # argsort() returns the indices that would sort an array in a ascending order
     sortedDistIndicies = distances.argsort()
     classCount = {}
-    # 2 选择距离最小的k个点 两行
     for i in range(k):
+        # 3 choose the min k distance
         voteIlabel = labels[sortedDistIndicies[i]]
+        # 4 count the times labels occur
         classCount[voteIlabel] = classCount.get(voteIlabel, 0) + 1
-    sortedClassCount = sorted(classCount.items(),
-                              # 3 排序
-                              key=operator.itemgetter(1), reverse=True)
+    # 5 the max voted class will return, use sorted()
+    sortedClassCount = sorted(
+        classCount.items(), key=operator.itemgetter(1), reverse=True)
     return sortedClassCount[0][0]
