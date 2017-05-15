@@ -45,5 +45,5 @@ def kNNClassify(inData, dataSet, labels, k):
         classCount[voteIlabel] = classCount.get(voteIlabel, 0) + 1
     # 5 the max voted class will return, use sorted()
     sortedClassCount = sorted(
-        classCount.items(), key=operator.itemgetter(1), reverse=True)
+        classCount.items(), key=operator.itemgetter(1), reverse=True) # sort
     return sortedClassCount[0][0]
