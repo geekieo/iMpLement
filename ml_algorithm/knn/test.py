@@ -2,7 +2,7 @@ import kNN
 from numpy import *
 
 
-def __main__():
+def __test__():
     dataSet, labels = kNN.createDataSet()
     
     
@@ -15,4 +15,4 @@ def __main__():
     outputLabel = kNN.kNNClassify(inX, dataSet, labels, 3)
     print("Your input is:", inX, "and classified to class: ", outputLabel)
 
-__main__()
+__test__()
