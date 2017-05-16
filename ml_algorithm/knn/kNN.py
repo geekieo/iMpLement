@@ -28,7 +28,7 @@ def kNNClassify(inData, dataSet, labels, k):
     # the number of row
     dataSetSize = dataSet.shape[0]
     # 1 calculate Euclidean distance
-    # tile(A,(x,y)) A沿各个维度重复x或y次 
+    # tile(A,(x,y)) A沿各个维度复制x或y次,x为行，y为列
     diffMat = tile(inData, (dataSetSize, 1)) - dataSet  # subtract element-wise
     sqDiffMat = diffMat**2                      # squared for the subtract
     sqDistances = sqDiffMat.sum(axis=1)         # sum is performed by row
