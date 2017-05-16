@@ -35,7 +35,7 @@ def kNNClassify(inData, dataSet, labels, k):
     sqDistances = sqDiffMat.sum(axis=1)         # sum is performed by row 
     distances = sqDistances**0.5
     # 2 sort the distance  两行
-    # argsort() returns the indices that would sort an array in a ascending order
+    # argsort() returns the indices that would sort an array in a ascending order 返回矩阵升序排序的索引mat
     sortedDistIndicies = distances.argsort()
     classCount = {}
     for i in range(k):
