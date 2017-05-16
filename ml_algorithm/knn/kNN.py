@@ -11,7 +11,7 @@ Output: the most popular(has more neighbors) class label
 
 from numpy import *
 import operator
-
+   
 # create a dataset which contains 4 samples with 2 classes
 
 
@@ -28,11 +28,10 @@ def kNNClassify(inData, dataSet, labels, k):
     # the number of row
     dataSetSize = dataSet.shape[0]
     # 1 calculate Euclidean distance
-    # 通过重复迭代构造训练集矩阵
+    # tile(A,(x,y)) A沿各个维度重复x或y次 
     diffMat = tile(inData, (dataSetSize, 1)) - dataSet  # subtract element-wise
-    sqDiffMat = diffMat**2                              # squared for the subtract
-    # sum is performed by row
-    sqDistances = sqDiffMat.sum(axis=1)
+    sqDiffMat = diffMat**2                      # squared for the subtract
+    sqDistances = sqDiffMat.sum(axis=1)         # sum is performed by row
     distances = sqDistances**0.5
     # 2 sort the distance  两行
     # argsort() returns the indices that would sort an array in a ascending order
