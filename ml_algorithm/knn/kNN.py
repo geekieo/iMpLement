@@ -58,3 +58,44 @@ def img2vector(filename):
             imgVector[0, row*32+col] = int(lineStr[col])
     return imgVector    
     
+# load dataSet
+def loadDataSet():
+    ## step 1: Getting training set
+    print('- Getting training set...')
+    dataSetDir = '../data/binary_digits/'
+    trainingFileList = os.listdir(dataSetDir + 'training_digits') # load training set
+    numSamples = len(trainingFileList)
+
+    train_x = zero((numSamples, 1024))
+    train_y = []
+    for i in xrange(numSamples):
+        # get train_x
+        train_x[i, :] = img2vector
+        # get label from file name such as '1_18.txt'
+        label = int(filename.split('_')[0]) # return 1
+        test_y.append(label)
+
+    ## step 2: Getting testing set
+    print('- Getting test set...')
+    testingFileList = os.listdir(dataSetDir + 'test_Digits') # load test set
+    numSamples = len(testingFileList)
+    test_x = zeros((numSamples, 1024))
+    test_y = []
+    for i in xrange(numSamples):
+        filename = testingFileList[i]
+
+        # get train_x
+        test_x[i, :] = img2vector(dataSetDir + 'test_Digits' % filename)
+
+        # get label from file name such as '1_18.txt'
+        label = int(filename.split('_')[0]) # return 1
+        test_y.append(label)
+
+    return train_x, train_y, test_x, test_y
+
+# test hand writting class
+def testHandWrittingClass():
+    ## step 1: load data
+    print('step 1: load data...')
+    train_x, train_y, test_x,test_y = loadDataSet()
+    
