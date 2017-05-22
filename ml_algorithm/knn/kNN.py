@@ -1,4 +1,4 @@
-!#/usr/bin/python3
+#/usr/bin/python3
 '''
 kNN: k nearest neighbors (k 近邻)
      
@@ -50,11 +50,11 @@ def kNNClassify(inputData, dataSet, labels, k):
 def img2vector(filename):
     rows = 32
     cols = 32
-    imgVector = zero((1,row*cols))
+    imgVector = zeros((1,rows*cols))
     fileIn = open(filename)
-    for row in xrange(rows):
+    for row in range(rows):
         lineStr = fileIn.readline()
-        for col in xrange(cols):
+        for col in range(cols):
             imgVector[0, row*32+col] = int(lineStr[col])
     return imgVector    
     
@@ -62,18 +62,19 @@ def img2vector(filename):
 def loadDataSet():
     ## step 1: Getting training set
     print('- Getting training set...')
-    dataSetDir = '../data/binary_digits/'
+    dataSetDir = '../data/'
     trainingFileList = os.listdir(dataSetDir + 'training_digits') # load training set
     numSamples = len(trainingFileList)
 
-    train_x = zero((numSamples, 1024))
+    train_x = zeros((numSamples, 1024))
     train_y = []
-    for i in xrange(numSamples):
+    for i in range(numSamples):
+        filename = trainingFileList[i]
         # get train_x
-        train_x[i, :] = img2vector
+        train_x[i, :] = img2vector(dataSetDir + 'training_digits/%s' % filename)
         # get label from file name such as '1_18.txt'
         label = int(filename.split('_')[0]) # return 1
-        test_y.append(label)
+        train_y.append(label)
 
     ## step 2: Getting testing set
     print('- Getting test set...')
@@ -81,11 +82,11 @@ def loadDataSet():
     numSamples = len(testingFileList)
     test_x = zeros((numSamples, 1024))
     test_y = []
-    for i in xrange(numSamples):
+    for i in range(numSamples):
         filename = testingFileList[i]
 
         # get train_x
-        test_x[i, :] = img2vector(dataSetDir + 'test_Digits' % filename)
+        test_x[i, :] = img2vector(dataSetDir + 'test_Digits/%s' % filename)
 
         # get label from file name such as '1_18.txt'
         label = int(filename.split('_')[0]) # return 1
@@ -94,8 +95,25 @@ def loadDataSet():
     return train_x, train_y, test_x, test_y
 
 # test hand writting class
-def testHandWrittingClass():
-    ## step 1: load data
+def testHandWritingClass():
+    ## step 1
     print('step 1: load data...')
     train_x, train_y, test_x,test_y = loadDataSet()
     
+    ## step 2
+    print('step 2: train...')
+    pass
+
+    ## step 3
+    print('step 3: testing...')
+    numTestSamples = test_x.shape[0]
+    matchCount = 0
+    for i in range(numTestSamples):
+        predict = kNNClassify(test_x[i], train_x, train_y, 3)
+        if predict == test_y[i]:
+            matchCount += 1
+    accuracy = float(matchCount) / numTestSamples
+
+    ## step 4
+    print('step 4: show the result...')
+    print('The classify accuracy is: %.2f%%' %(accuracy*100))
