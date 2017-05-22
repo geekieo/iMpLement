@@ -55,7 +55,7 @@ def kNNClassify(inputData, dataSet, labels, k):
 def img2vector(filename):
     rows = 32
     cols = 32
-    imgVector = zeros((1, rows * cols))
+    imgVector = zeros((1, rows * cols)) # initialize vector
     fileIn = open(filename)
     for row in range(rows):
         lineStr = fileIn.readline()
@@ -78,8 +78,8 @@ def loadDataSet():
     for i in range(numSamples):
         filename = trainingFileList[i]
         # get train_x
-        train_x[i, :] = img2vector(dataSetDir +
-                                   'training_digits/%s' % filename)
+        train_x[i, :] = img2vector(
+            dataSetDir + 'training_digits/%s' % filename)
         # get label from file name such as '1_18.txt'
         label = int(filename.split('_')[0])  # return 1
         train_y.append(label)
