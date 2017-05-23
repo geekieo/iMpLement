@@ -10,6 +10,7 @@ from scipy.sparse import csr_matrix
 
 def kNN_Sparse(local_data_csr, query_data_csr, top_k):
     # calculate the square sum of each vector
+    # sum(1) 列元素叠加
     local_data_sq = local_data_csr.multiply(local_data_csr).sum(1)
     query_data_sq = query_data_csr.multiply(query_data_csr).sum(1)
 
