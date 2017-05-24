@@ -13,6 +13,9 @@ Output: the most popular(has more neighbors) class label
 from numpy import *
 import operator
 import os
+# 绘图库
+import matplotlib
+import matplotlib.pyplot as plt
 
 
 # create a dataset which contains 4 samples with 2 classes
@@ -133,7 +136,7 @@ def file2matrix(filename):
     arrayOfLines = file.readlines()
     numberOfLine = len(arrayOfLines)  #1 得到文件行数
     returnMat = zeros((numberOfLine, 3))  #2 创建返回的Numpy矩阵
-    classLabelVector = [] # 标签存到一个向量中，初始化标签向量
+    classLabelVector = []  # 标签存到一个向量中，初始化标签向量
     index = 0
     #3 解析文件数据到里列表
     for line in arrayOfLines:
@@ -143,3 +146,12 @@ def file2matrix(filename):
         classLabelVector.append(int(listFromLine[-1]))  #将后一列存储到标签向量中
         index += 1
     return returnMat, classLabelVector
+
+
+def drawPlot(array_x, array_y):
+    # 2D 作图
+    # 条件：len(array_x) = len(array_y)
+    fig = plt.figure()
+    ax = fig.add_subplot(111)
+    ax.scatter(array_x, array_y)
+    plt.show()
