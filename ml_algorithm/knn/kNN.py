@@ -16,7 +16,7 @@ import os
 # 绘图库
 import matplotlib
 import matplotlib.pyplot as plt
-
+from mpl_toolkits.mplot3d import Axes3D
 
 # create a dataset which contains 4 samples with 2 classes
 def createDataSet():
@@ -155,5 +155,18 @@ def drawPlot(array_x, array_y, labels):
     fig = plt.figure()
     ax = fig.add_subplot(111)
     # Marker size is scaled by 15.0*array(labels), marker color is mapped to 15.0*array(labels)
-    ax.scatter(array_x, array_y, 15.0*array(labels), 15.0*array(labels)) # x轴，y轴，size， color
+    ax.scatter(array_x, array_y, 15.0 * array(labels),
+               15.0 * array(labels))  # x轴，y轴，size， color
+    plt.show()
+
+
+def drawPlot(array_x, array_y, array_z, labels):
+    # 3D 作图
+    # 条件：len(array_x) = len(array_y) = len(array_z)
+    fig = plt.figure()
+    ax = fig.add_subplot(111, projection='3d')
+    ax.scatter(array_x, array_y, array_z, 15.0 * array(labels))
+    ax.set_xlabel('Flight mileage')
+    ax.set_ylabel('Game time')
+    ax.set_zlabel('Icecream per week')
     plt.show()
