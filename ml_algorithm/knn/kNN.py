@@ -133,7 +133,7 @@ def file2matrix(filename):
     arrayOfLines = file.readlines()
     numberOfLine = len(arrayOfLines)  #1 得到文件行数
     returnMat = zeros((numberOfLine, 3))  #2 创建返回的Numpy矩阵
-    classLabelVector = []
+    classLabelVector = [] # 标签存到一个向量中，初始化标签向量
     index = 0
     #3 解析文件数据到里列表
     for line in arrayOfLines:
