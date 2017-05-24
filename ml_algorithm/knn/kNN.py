@@ -148,10 +148,12 @@ def file2matrix(filename):
     return returnMat, classLabelVector
 
 
-def drawPlot(array_x, array_y):
+def drawPlot(array_x, array_y, labels):
     # 2D 作图
+    # Make a scatter plot of array_x vs array_y
     # 条件：len(array_x) = len(array_y)
     fig = plt.figure()
     ax = fig.add_subplot(111)
-    ax.scatter(array_x, array_y)
+    # Marker size is scaled by 15.0*array(labels), marker color is mapped to 15.0*array(labels)
+    ax.scatter(array_x, array_y, 15.0*array(labels), 15.0*array(labels)) # x轴，y轴，size， color
     plt.show()
