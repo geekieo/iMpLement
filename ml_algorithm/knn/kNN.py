@@ -68,7 +68,7 @@ def img2vector(filename):
 def loadDataSet():
     ## step 1: Getting training set
     print('- Getting training set...')
-    dataSetDir = '../data/'
+    dataSetDir = 'knn/data/'
     trainingFileList = os.listdir(
         dataSetDir + 'training_digits')  # load training set
     numSamples = len(trainingFileList)
