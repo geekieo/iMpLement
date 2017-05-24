@@ -55,7 +55,7 @@ def kNNClassify(inputData, dataSet, labels, k):
 def img2vector(filename):
     rows = 32
     cols = 32
-    imgVector = zeros((1, rows * cols)) # initialize vector
+    imgVector = zeros((1, rows * cols))  # initialize vector
     fileIn = open(filename)
     for row in range(rows):
         lineStr = fileIn.readline()
@@ -78,8 +78,8 @@ def loadDataSet():
     for i in range(numSamples):
         filename = trainingFileList[i]
         # get train_x
-        train_x[i, :] = img2vector(
-            dataSetDir + 'training_digits/%s' % filename)
+        train_x[i, :] = img2vector(dataSetDir +
+                                   'training_digits/%s' % filename)
         # get label from file name such as '1_18.txt'
         label = int(filename.split('_')[0])  # return 1
         train_y.append(label)
@@ -126,3 +126,20 @@ def testHandWritingClass():
     ## step 4
     print('step 4: show the result...')
     print('The classify accuracy is: %.2f%%' % (accuracy * 100))
+
+
+def file2matrix(filename):
+    file = open(filename)
+    arrayOfLines = file.readlines()
+    numberOfLine = len(arrayOfLines)  #1 得到文件行数
+    returnMat = zeros((numberOfLine, 3))  #2 创建返回的Numpy矩阵
+    classLabelVector = []
+    index = 0
+    #3 解析文件数据到里列表
+    for line in arrayOfLines:
+        line = line.strip()  #去除行尾的回车
+        listFromLine = line.split('\t')  #以\t为分隔符，将一行数据分割成一个元素列表
+        returnMat[index, :] = listFromLine[0:3]  #将前三列存储到特征矩阵的第 index+1 行
+        classLabelVector.append(int(listFromLine[-1]))  #将后一列存储到标签向量中
+        index += 1
+    return returnMat, classLabelVector
