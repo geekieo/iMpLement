@@ -18,6 +18,7 @@ import matplotlib
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 
+
 # create a dataset which contains 4 samples with 2 classes
 def createDataSet():
     # create a matrx: each row as a sample
@@ -170,3 +171,20 @@ def drawPlot(array_x, array_y, array_z, labels):
     ax.set_ylabel('Game time')
     ax.set_zlabel('Icecream per week')
     plt.show()
+
+
+def autoNorm(dataSet):
+    # 特征数值归一化到[0,1]
+    # 计算公式：newValue = (oldValue – min) / (max – min)
+    # dataSet 中一行为一个样本特征组，每个样本特征组包含多列独立特征值
+    # 1 向量部分
+    minVals = dataSet.min(0)  # 取每列特征的最小值,得到一个每列为最小值的行向量
+    maxVals = dataSet.max(0)  # 取每列特征的最大值,得到一个每列为最大值的行向量
+    ranges = maxVals - minVals  # 计算特征组的数值范围向量
+
+    # 2 矩阵部分
+    normDataSet = zeros(shape(dataSet))  # 结果变量初始化
+    m = dataSet.shape[0]  # 行数，样本特征组组数
+    minValsMat = tile(minVals, (m, 1))
+    normDataSet = (dataSet - minValsMat)/ tile(ranges, (m, 1))
+    return normDataSet, ranges, minVals
