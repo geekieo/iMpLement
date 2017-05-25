@@ -25,6 +25,7 @@ n = 100
 
 # For each set of style and range settings, plot n random points in the box
 # defined by x in [23, 32], y in [0, 100], z in [zlow, zhigh].
+# 'r'红色，'b'蓝色，'o'圆圈,'^'三角形
 for c, m, zlow, zhigh in [('r', 'o', -50, -25), ('b', '^', -30, -5)]:
     xs = randrange(n, 23, 32)
     ys = randrange(n, 0, 100)
