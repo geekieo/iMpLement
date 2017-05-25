@@ -54,6 +54,7 @@ def kNNClassify(inputData, dataSet, labels, k):
         classCount.items(), key=operator.itemgetter(1), reverse=True)  # sort
     return sortedClassCount[0][0]
 
+
 # ========== hand writing digits classification - start ========== #
 # convert image to vector
 def img2vector(filename):
@@ -131,7 +132,9 @@ def testHandWritingClass():
     print('step 4: show the result...')
     print('The classify accuracy is: %.2f%%' % (accuracy * 100))
 
+
 # ========== hand writing digits classification- end ========== #
+
 
 # ========== dating classification - start ========== #
 def file2matrix(filename):
@@ -167,9 +170,11 @@ def drawPlot2D(array_x, array_y, labels):
 def drawPlot3D(array_x, array_y, array_z, labels):
     # 3D 作图
     # 条件：len(array_x) = len(array_y) = len(array_z)
+    # labels = {1，2，3}
+
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
-    ax.scatter(array_x, array_y, array_z, 15.0 * array(labels), 15.0 * array(labels))
+    ax.scatter(array_x, array_y, array_z, c=255 * 10 * array(labels))
     ax.set_xlabel('Flight mileage')
     ax.set_ylabel('Game time')
     ax.set_zlabel('Icecream per week')
@@ -189,5 +194,5 @@ def autoNorm(dataSet):
     normDataSet = zeros(shape(dataSet))  # 结果变量初始化
     m = dataSet.shape[0]  # 行数，样本特征组组数
     minValsMat = tile(minVals, (m, 1))
-    normDataSet = (dataSet - minValsMat)/ tile(ranges, (m, 1))
+    normDataSet = (dataSet - minValsMat) / tile(ranges, (m, 1))
     return normDataSet, ranges, minVals
