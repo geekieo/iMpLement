@@ -54,7 +54,7 @@ def kNNClassify(inputData, dataSet, labels, k):
         classCount.items(), key=operator.itemgetter(1), reverse=True)  # sort
     return sortedClassCount[0][0]
 
-
+# ========== hand writing digits classification - start ========== #
 # convert image to vector
 def img2vector(filename):
     rows = 32
@@ -131,8 +131,11 @@ def testHandWritingClass():
     print('step 4: show the result...')
     print('The classify accuracy is: %.2f%%' % (accuracy * 100))
 
+# ========== hand writing digits classification- end ========== #
 
+# ========== dating classification - start ========== #
 def file2matrix(filename):
+    # transform datingTestSet.txy to matrix
     file = open(filename)
     arrayOfLines = file.readlines()
     numberOfLine = len(arrayOfLines)  #1 得到文件行数
