@@ -152,7 +152,7 @@ def file2matrix(filename):
     return returnMat, classLabelVector
 
 
-def drawPlot(array_x, array_y, labels):
+def drawPlot2D(array_x, array_y, labels):
     # 2D 作图
     # Make a scatter plot of array_x vs array_y
     # 条件：len(array_x) = len(array_y)
@@ -164,12 +164,12 @@ def drawPlot(array_x, array_y, labels):
     plt.show()
 
 
-def drawPlot(array_x, array_y, array_z, labels):
+def drawPlot3D(array_x, array_y, array_z, labels):
     # 3D 作图
     # 条件：len(array_x) = len(array_y) = len(array_z)
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
-    ax.scatter(array_x, array_y, array_z, 15.0 * array(labels))
+    ax.scatter(array_x, array_y, array_z, 15.0 * array(labels), 15.0 * array(labels))
     ax.set_xlabel('Flight mileage')
     ax.set_ylabel('Game time')
     ax.set_zlabel('Icecream per week')
