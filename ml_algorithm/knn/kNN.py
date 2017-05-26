@@ -27,7 +27,7 @@ def createDataSet():
     return group, labels
 
 
-# classify using kNN 分类器实现
+# classify using kNN k近邻分类算法
 def kNNClassify(inputData, dataSet, labels, k):
     # the number of row
     dataSetSize = dataSet.shape[0]
@@ -41,8 +41,8 @@ def kNNClassify(inputData, dataSet, labels, k):
     distances = sqDistances**0.5  # distances from inputData to each point in dataSet
     # 2 sort the distance  两行
     # argsort() returns the indices that would sort an array in a ascending order
-    sortedDistIndicies = distances.argsort(
-    )  #返回矩阵升序排序的索引,如 array([5,2,4])返回 array([3,1,2])
+    #返回矩阵升序排序的索引,如 array([5,2,4])返回 array([3,1,2])
+    sortedDistIndicies = distances.argsort() 
     classCount = {}
     for i in range(k):
         # 3 choose the label of the min k distance
@@ -150,7 +150,7 @@ def file2matrix(filename):
         line = line.strip()  #去除行尾的回车
         listFromLine = line.split('\t')  #以\t为分隔符，将一行数据分割成一个元素列表
         returnMat[index, :] = listFromLine[0:3]  #将前三列存储到特征矩阵的第 index+1 行
-        classLabelVector.append(int(listFromLine[-1]))  #将后一列存储到标签向量中
+        classLabelVector.append(int(listFromLine[-1]))  #将最后一列存储到标签向量中
         index += 1
     return returnMat, classLabelVector
 
@@ -196,3 +196,18 @@ def autoNorm(dataSet):
     minValsMat = tile(minVals, (m, 1))
     normDataSet = (dataSet - minValsMat) / tile(ranges, (m, 1))
     return normDataSet, ranges, minVals
+
+
+def classifyPerson():
+    # 对新人特征并做 knn 分类
+    # raw_input() 允许用户输入文本行命令并返回用户所输入的内容
+    labelList = ['不会喜欢', '有一点可能会喜欢', '有很大可能会喜欢']
+    percentTats = float(raw_input('每天玩游戏的时间占比(%)？'))
+    ffMiles = float(raw_input('每年攒的飞机里程数(km)？'))
+    iceCream = float(raw_input('每年吃掉的冰淇淋？（0~2L)'))
+    datingMat, datingLabels = file2matrix('datingTestSet2.txt')
+    normMat, ranges, minVals = autoNorm(datingMat)
+    inArr = array([ffMiles, percentTats, iceCream])
+    classifierResult = kNNClassify((inArr - minVals) / ranges, normMat,
+                                   datingLabels, 3) # 结果在 {1,2,3} 之中
+    print('你喜欢这个人的可能是：', labelList[classifierResult - 1])
