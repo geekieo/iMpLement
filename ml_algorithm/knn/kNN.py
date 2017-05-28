@@ -43,15 +43,17 @@ def kNNClassify(inputData, dataSet, labels, k):
     # argsort() returns the indices that would sort an array in a ascending order
     #返回矩阵升序排序的索引,如 array([5,2,4])返回 array([3,1,2])
     sortedDistIndicies = distances.argsort() 
-    classCount = {}
+    classCount = {} # 标签数统计字典初始化
     for i in range(k):
         # 3 choose the label of the min k distance
         voteIlabel = labels[sortedDistIndicies[i]]
         # 4 count the times labels occur
-        classCount[voteIlabel] = classCount.get(voteIlabel, 0) + 1
-    # 5 the max voted class will return, use sorted()
+        classCount[voteIlabel] = classCount.get(voteIlabel, 0) + 1 # 如果 voteIlabel 不存在，取 0， + 1
+    # 5 the voted class will return with a ordered list
+    # 遍历classCount，对字典第二域(矩阵中为第二列)统计数排序，reverse 逆序，返回从大到小排列的list
     sortedClassCount = sorted(
-        classCount.items(), key=operator.itemgetter(1), reverse=True)  # sort
+        # operator.itemgetter()函数获取的不是值，而是定义了一个函数，通过该函数作用到对象 classCount 上才能获取值
+        classCount.items(), key=operator.itemgetter(1), reverse=True)
     return sortedClassCount[0][0]
 
 
@@ -69,7 +71,12 @@ def img2vector(filename):
     return imgVector
 
 
-# load dataSet
+# describe: 
+# load train/test dataSet 
+# return handcraft feature of each dataset
+# feature:
+# transform the 32*32 images to 1024 vectors
+# the feature is statistics the vectors of one class 
 def loadDataSet():
     ## step 1: Getting training set
     print('- Getting training set...')
@@ -196,24 +203,4 @@ def autoNorm(dataSet):
     normDataSet = (dataSet - minValsMat) / tile(ranges, (m, 1))
     return normDataSet, ranges, minVals
 
-
-def classifyPerson():
-    # 对新人特征并做 knn 分类
-    # input() 允许用户输入文本行命令并返回用户所输入的内容
-    # raw_input() 将所有输入作为字符串看待，返回字符串类型
-    labelList = ['不会喜欢', '有一点可能会喜欢', '有很大可能会喜欢']
-    ffMiles = 8000
-    percentTats = 10
-    iceCream = 2
-    # while(ffMiles is empty):
-    #     ffMiles = float(input('每年攒下的飞机里程数(km)? 参考范围:0~10000: '))
-    # while(percentTats is empty):
-    #     percentTats = float(input('玩游戏的时间占比(%)? 参考范围:0~20: '))
-    # while(iceCream is empty):
-    #     iceCream = float(input('每年吃掉的冰淇淋(L)? 参考范围:0~2: '))
-    datingMat, datingLabels = file2matrix('datingTestSet2.txt')
-    normMat, ranges, minVals = autoNorm(datingMat)
-    inArr = array([ffMiles, percentTats, iceCream])
-    classifierResult = kNNClassify((inArr - minVals) / ranges, normMat,
-                                   datingLabels, 3) # 结果在 {1,2,3} 之中
-    print('你喜欢这个人的可能是：', labelList[classifierResult - 1])
+# ========== dating classification - end ========== #
