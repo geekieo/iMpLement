@@ -33,7 +33,7 @@ def kNNClassify(inputData, dataSet, labels, k):
     dataSetSize = dataSet.shape[0]
     # 1 calculate Euclidean distance
     # tile(A,(x,y)) A沿各个维度复制x或y次,x为行，y为列
-    # sum(axis=1) 行内求和，按照行的方向相加,sum(axis=0) 列内求和，按照列的方向相加，sum()全部相加
+    # sum(axis=0) 叠加到一行，列内求和; sum(axis=1) 叠加到一列，行内求和; sum()全部相加
     diffMat = tile(inputData,
                    (dataSetSize, 1)) - dataSet  # subtract element-wise
     sqDiffMat = diffMat**2  # squared for the subtract
@@ -73,7 +73,7 @@ def img2vector(filename):
 def loadDataSet():
     ## step 1: Getting training set
     print('- Getting training set...')
-    dataSetDir = 'knn/data/'
+    dataSetDir = 'data/'
     trainingFileList = os.listdir(
         dataSetDir + 'training_digits')  # load training set
     numSamples = len(trainingFileList)
@@ -83,8 +83,7 @@ def loadDataSet():
     for i in range(numSamples):
         filename = trainingFileList[i]
         # get train_x
-        train_x[i, :] = img2vector(dataSetDir +
-                                   'training_digits/%s' % filename)
+        train_x[i, :] = img2vector(dataSetDir + 'training_digits/%s' % filename)
         # get label from file name such as '1_18.txt'
         label = int(filename.split('_')[0])  # return 1
         train_y.append(label)
@@ -149,8 +148,8 @@ def file2matrix(filename):
     for line in arrayOfLines:
         line = line.strip()  #去除行尾的回车
         listFromLine = line.split('\t')  #以\t为分隔符，将一行数据分割成一个元素列表
-        returnMat[index, :] = listFromLine[0:3]  #将前三列存储到特征矩阵的第 index+1 行
-        classLabelVector.append(int(listFromLine[-1]))  #将最后一列存储到标签向量中
+        returnMat[index, :] = listFromLine[0:3]  #将前三列存储到特征矩阵的第 index 行
+        classLabelVector.append(listFromLine[-1])  #将最后一列存储到标签向量中
         index += 1
     return returnMat, classLabelVector
 
@@ -200,11 +199,18 @@ def autoNorm(dataSet):
 
 def classifyPerson():
     # 对新人特征并做 knn 分类
-    # raw_input() 允许用户输入文本行命令并返回用户所输入的内容
+    # input() 允许用户输入文本行命令并返回用户所输入的内容
+    # raw_input() 将所有输入作为字符串看待，返回字符串类型
     labelList = ['不会喜欢', '有一点可能会喜欢', '有很大可能会喜欢']
-    percentTats = float(raw_input('每天玩游戏的时间占比(%)？'))
-    ffMiles = float(raw_input('每年攒的飞机里程数(km)？'))
-    iceCream = float(raw_input('每年吃掉的冰淇淋？（0~2L)'))
+    ffMiles = 8000
+    percentTats = 10
+    iceCream = 2
+    # while(ffMiles is empty):
+    #     ffMiles = float(input('每年攒下的飞机里程数(km)? 参考范围:0~10000: '))
+    # while(percentTats is empty):
+    #     percentTats = float(input('玩游戏的时间占比(%)? 参考范围:0~20: '))
+    # while(iceCream is empty):
+    #     iceCream = float(input('每年吃掉的冰淇淋(L)? 参考范围:0~2: '))
     datingMat, datingLabels = file2matrix('datingTestSet2.txt')
     normMat, ranges, minVals = autoNorm(datingMat)
     inArr = array([ffMiles, percentTats, iceCream])
