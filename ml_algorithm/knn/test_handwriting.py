@@ -1,4 +1,4 @@
-import kNN  
+from kNN import *  
 
 # test hand writting class
 def handwritingClassTest():

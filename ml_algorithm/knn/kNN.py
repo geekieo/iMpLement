@@ -71,12 +71,9 @@ def img2vector(filename):
     return imgVector
 
 
-# describe: 
+# describtion: 
 # load train/test dataSet 
 # return handcraft feature of each dataset
-# feature:
-# transform the 32*32 images to 1024 vectors
-# the feature is statistics the vectors of one class 
 def loadDataSet():
     ## step 1: Getting training set
     print('- Getting training set...')
@@ -85,6 +82,9 @@ def loadDataSet():
         dataSetDir + 'training_digits')  # load training set
     numSamples = len(trainingFileList)
 
+    # feature :
+    # transform the 32*32 images to 1024 vectors
+    # the feature is statistics the vectors of one class 
     train_x = zeros((numSamples, 1024))
     train_y = []
     for i in range(numSamples):
@@ -112,31 +112,6 @@ def loadDataSet():
         test_y.append(label)
 
     return train_x, train_y, test_x, test_y
-
-
-# test hand writting class
-def testHandWritingClass():
-    ## step 1
-    print('step 1: load data...')
-    train_x, train_y, test_x, test_y = loadDataSet()
-
-    ## step 2
-    print('step 2: train...')
-    pass
-
-    ## step 3
-    print('step 3: testing...')
-    numTestSamples = test_x.shape[0]
-    matchCount = 0
-    for i in range(numTestSamples):
-        predict = kNNClassify(test_x[i], train_x, train_y, 3)
-        if predict == test_y[i]:
-            matchCount += 1
-    accuracy = float(matchCount) / numTestSamples
-
-    ## step 4
-    print('step 4: show the result...')
-    print('The classify accuracy is: %.2f%%' % (accuracy * 100))
 
 
 # ========== hand writing digits classification- end ========== #
