@@ -23,3 +23,12 @@ def calcShannonEnt(dataSet):
         # 和上个循环结果相加，实现累加求和，得到期望
         shannonEnt -= prob*log(prob,2) # 以2为底数求对数
     return shannonEnt
+
+def createDataSet():
+    dataSet = [ [1, 1, 'yes'],
+                [1, 1, 'yes'],
+                [1, 0, 'no'],
+                [0, 1, 'no'],
+                [0, 1, 'no']]
+    labels = ['no surfacing','flippers']
+    return dataSet, labels
