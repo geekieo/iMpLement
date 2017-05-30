@@ -2,11 +2,12 @@ from math import log
 
 '''
 计算给定数据集合的香浓熵
+dataSet 中最后一列为label，其余列为特征值
 '''
 @staticmethod
 def calcShannonEnt(dataSet):
     numEntries = len(dataSet)
-    labelCounts{}
+    labelCounts = {}
     # 为所有可能分类创建字典(5行)
     for featVec in dataSet:
         currentLabel = featVec[-1]
