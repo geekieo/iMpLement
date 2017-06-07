@@ -35,3 +35,15 @@ def createDataSet():
     dataSet2 = copy.deepcopy(dataSet) #内存拷贝，真拷贝
     dataSet2[0][-1] = 'maybe'
     return dataSet, labels, dataSet2
+
+
+def splitDataSet(dataSet, axis, value):
+    #1 创建新的list对象
+    retDataSet=[]
+    for featVec in dataSet:
+        if featVec[axis] == value:
+            #2 提取
+            reducedFeatVec = featVec[:, axis] # 拷贝 axis 之前所有列
+            reducedFeatVec.extend(featVec[axis+1, :])
+            retDataSet.append(reducedFeatVec)
+    return retDataSet
