@@ -41,9 +41,9 @@ def splitDataSet(dataSet, axis, value):
     #1 创建新的list对象
     retDataSet=[]
     for featVec in dataSet:
-        if featVec[axis] == value:
-            #2 提取
-            reducedFeatVec = featVec[:, axis] # 拷贝 axis 之前所有列
-            reducedFeatVec.extend(featVec[axis+1, :])
+        if featVec[axis] == value: #如果考察项 == value
+            #2 跳过axis，提取其他位置元素，组成新 list
+            reducedFeatVec = featVec[:axis] # 不包括axis
+            reducedFeatVec.extend(featVec[axis+1:])
             retDataSet.append(reducedFeatVec)
     return retDataSet
