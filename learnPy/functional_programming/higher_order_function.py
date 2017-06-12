@@ -28,5 +28,12 @@ def same(num, *kw):
 
 
 result = same(-10.5, sqrt, abs, tan)
-
 print(result)
+
+'''
+函数式编程简单例程
+'''
+def add(x,y,f):
+    return f(x)+f(y)
+
+print(add(-5,6,abs))
