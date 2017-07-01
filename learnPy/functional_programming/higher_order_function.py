@@ -1,5 +1,6 @@
 from math import sqrt
 from math import tan
+import builtins
 '''
 高阶函数应用，返回一个数字不同方法计算结果
 '''
