@@ -25,7 +25,7 @@ def partition(unsorted, low, high):
             unsorted[low], unsorted[high] = unsorted[high], unsorted[low]
     # 小值区间的最后一个值和 pivot 置换位置，完成分割
     if (pivot != unsorted[low]):
-        # 注意！这种写法不能直接用 pivot 替换 unsorted[init_index]，不在一个数组中不能这么交换元素
+        # 注意！这种写法交换的是成员指针，不能直接用 pivot 替换 unsorted[init_index]，不在一个数组中无法交换
         unsorted[init_index], unsorted[low] = unsorted[low], unsorted[
             init_index]
     return low  #此时 low == high
