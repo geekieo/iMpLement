@@ -1,8 +1,8 @@
-import convolution as con 
+from convolution import Convolution
 
 
 def test():
-    c = con.Convolution()
+    c = Convolution()
     kernal =[[1,2,3], 
                 [1,2,3],
                 [1,2,3]]
@@ -15,3 +15,7 @@ def test():
             [5,6,7,5,6,7,5,6],
             [1,1,1,0,0,0,2,2]]
     c.convolution(kernal,src)
+    # for index,elem in enumerate(src):
+    #     print(index,elem)
+
+test()
