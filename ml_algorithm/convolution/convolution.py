@@ -28,5 +28,5 @@ class Convolution(object):
                         for cRIndex, kRow in enumerate(kernal):
                             for cCIndex, kPixel in enumerate(kRow):
                                 pass
-                        print(sPixel)
-                print("\n")
+                        print(sPixel, end='')
+                print(end='\n')
