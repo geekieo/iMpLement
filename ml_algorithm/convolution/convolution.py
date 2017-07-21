@@ -26,7 +26,7 @@ class Convolution(object):
                 for cRIndex,kRow in enumerate(kernal):
                     for cCIndex,kPixel in enumerate(kRow):
                         pass
-                print(sPiexl)
+                print(sPixel)
             print("\n")        
 
 
