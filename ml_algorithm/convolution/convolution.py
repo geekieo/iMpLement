@@ -2,10 +2,10 @@ class Convolution(object):
     '''
     二维数组卷积运算
     '''
-    def convolution(self, kernal, src):
+    def convolution(self, src, kernal):
         '''
-        kernal 为卷积算子矩阵,\n
-        src 为被卷积矩阵
+        src 为被卷积矩阵,\n
+        kernal 为卷积算子矩阵,
         '''
         #获取 kernal, src 长宽
         kRowLen = len(kernal)
@@ -38,7 +38,18 @@ class Convolution(object):
                             for kCIndex, kPixel in enumerate(kRow):
                                 dstPixel += kPixel * src[minPixY + kRIndex][minPixX + kCIndex]
                         dst[sRIndex - kRRad][sCIndex - kCRad] = dstPixel
-        print(dst)
+        return dst
 
     def transpose(self, src):
         '''矩阵转置'''
+        sRowLen= len(src)
+        sColLen= len(src[0])
+        #初始化转置矩阵数组结构
+        dst = [[0 for dCol in range(sRowLen)] for dRow in range(sColLen)]
+        for sRIndex, sRow in enumerate(src):
+            for sCIndex, sPixel in enumerate(sRow):
+                dst[sCIndex][sRIndex]=sPixel
+        return dst
+
+    # def deConvolution(self, src, kernal):
+

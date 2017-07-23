@@ -14,8 +14,12 @@ def test():
         [1,0,1,0,1,0,1,0],
         [5,6,7,5,6,7,5,6],
         [1,1,1,0,0,0,2,2]]
-    c.convolution(kernal,src)
     # for index,elem in enumerate(src):
     #     print(index,elem)
+    dst1 = c.convolution(src, kernal)
+    deKernal = c.transpose(kernal)
+    dst2 = c.convolution(dst1, deKernal)
+    print(src)
+    print(dst2)
 
 test()
