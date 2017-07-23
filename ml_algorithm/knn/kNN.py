@@ -34,8 +34,7 @@ def kNNClassify(inputData, dataSet, labels, k):
     # 1 calculate Euclidean distance
     # tile(A,(x,y)) A沿各个维度复制x或y次,x为行，y为列
     # sum(axis=0) 叠加到一行，列内求和; sum(axis=1) 叠加到一列，行内求和; sum()全部相加
-    diffMat = tile(inputData,
-                   (dataSetSize, 1)) - dataSet  # subtract element-wise
+    diffMat = tile(inputData,(dataSetSize, 1)) - dataSet  # subtract element-wise
     sqDiffMat = diffMat**2  # squared for the subtract
     sqDistances = sqDiffMat.sum(axis=1)  # sum is performed by row
     distances = sqDistances**0.5  # distances from inputData to each point in dataSet
