@@ -38,12 +38,45 @@ def createDataSet():
 
 
 def splitDataSet(dataSet, axis, value):
-    #1 创建新的list对象，用于存放剔除 featVec[axis] 后的列表
+    '''
+    样本处理
+    设 dataSet 中的样本为 featVec，
+    对给定的 axis 下标，遍历 featVec[axis]，
+    跳过 featVec[axis]==value 的值，提取其他位置元素，组成新的 list
+    '''     
+    #1 创建用于存放剔除 featVec[axis] 后的样本列表
     retDataSet=[]
     for featVec in dataSet:
         if featVec[axis] == value:
-            #2 跳过axis，提取其他位置元素，组成新 list
+            #2 遍历 axis 位置，跳过等于value的值，提取其他位置元素，组成新 list
             reducedFeatVec = featVec[:axis] # 不包括 axis
             reducedFeatVec.extend(featVec[axis+1:])
             retDataSet.append(reducedFeatVec)
     return retDataSet
+
+def chooseBestFeatureToSplit(dataSet):
+    '''
+    数据划分（核心步骤）
+    遍历特征，根据信息增益，选择最佳决策划分方式
+    '''
+    numFeatures = len(dataSet[0]) - 1
+    baseEntropy = calcShannonEnt(dataSet)
+    bastInfoGain = 0.0
+    bestFeature = -1
+    for i in range(numFeatures):
+        #1 创建唯一的分类标签列表
+        feaList = [example[i] for example in dataSet]
+        uniqueVals = set(featList)
+        
+        newEntropy = 0.0
+        #2 计算每种划分结果的信息熵
+        for value in uniqueVals:
+            subDataSet = splitDataSet(dataSet, i, value):
+            prob = len(subDataSet)/float(len(dataSet))
+            newEntropy += prob * calcShannonEnt(subDataSet)
+        infoGain = baseEntropy - newEntropy
+        if(infoGain>bestInfoGain):
+            #3 记录最好的信息增益
+            bestInfoGain = infoGain
+            bestFeature = i
+    return bestFeature
