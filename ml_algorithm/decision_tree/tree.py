@@ -74,6 +74,7 @@ def chooseBestFeatureToSplit(dataSet):
     description：找出使分类结果熵最大的特征分量，这是决策树的核心步骤
     parameter：[特征分量,label]
     step: 计算信息增益（熵差），baseEntropy - 特征分量Entropy，选择增益最大的为最佳决策划分方式
+    return: 信息增益最大的特征分量索引
     '''
     numFeatures = len(dataSet[0]) - 1
     baseEntropy = calcShannonEnt(dataSet) #计算原数据熵
@@ -81,14 +82,14 @@ def chooseBestFeatureToSplit(dataSet):
     bestFeature = -1
     #遍历所有特征
     for i in range(numFeatures):
-        #1 创建唯一的分类标签列表
-        feaList = [example[i] for example in dataSet]
+        #1 创建唯一的分类标签列表,list 转 set
+        featList = [example[i] for example in dataSet]
         uniqueVals = set(featList)
         
         newEntropy = 0.0
         #2 计算每种划分结果的信息熵
         for value in uniqueVals:
-            subDataSet = splitDataSet(dataSet, i, value): 
+            subDataSet = splitDataSet(dataSet, i, value)
             prob = len(subDataSet)/float(len(dataSet)) #结点权重
             newEntropy += prob * calcShannonEnt(subDataSet) #结点信息熵加权和，同类有序，分类减熵，加权和不会大过比原始信息熵
         infoGain = baseEntropy - newEntropy #信息增益
