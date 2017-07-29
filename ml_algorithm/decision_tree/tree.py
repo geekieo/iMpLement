@@ -87,10 +87,9 @@ def chooseBestFeatureToSplit(dataSet):
     bestFeature = -1
     #按列遍历特征分量
     for i in range(numFeatures):
-        #1 创建唯一的分类标签列表
-        #  提取数据集的列元素
-        featList = [example[i] for example in dataSet]
-        uniqueVals = set(featList) #归纳结点类型
+        #1 创建唯一的特征分量列表
+        featList = [example[i] for example in dataSet] #提取全部数据集的第i列元素
+        uniqueVals = set(featList) #归纳结点类别
         
         newEntropy = 0.0
         #2 遍历结点类型，计算的加权信息熵
