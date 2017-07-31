@@ -31,10 +31,10 @@ def calcShannonEnt(dataSet):
 
 def createDataSet():
     '''
-    格式说明：
+    dataSet 格式说明：
         按行看，最后一列为样本标签，其余列为特征分量
         按列看，不同取值为特征分量的不同结点，同一取值为同一结点
-    dataSet数据格式：
+    dataSet 数据格式：
         数据必须是一种由列表元素组成的列表，而且所有的列表元素都要具有相同的数据长度；
         每一行为一个样本，每个样本有1到多个特征分量，按列的形式顺序存储
         样本的最后一个元素(数据集的最后一个列)是当前实例的类别标签。
@@ -96,7 +96,7 @@ def chooseBestFeatureToSplit(dataSet):
         for value in uniqueVals:
             subDataSet = splitDataSet(dataSet, i, value) 
             prob = len(subDataSet)/float(len(dataSet)) #结点权重
-            newEntropy += prob * calcShannonEnt(subDataSet) #结点信息熵加权和，同类有序，分类减熵，加权和不会大过比原始信息熵
+            newEntropy += prob * calcShannonEnt(subDataSet) #结点信息熵加权和，同类有序，分类减熵，加权和不会大过原始熵
         infoGain = baseEntropy - newEntropy #信息增益
         if(infoGain>bestInfoGain):
             #3 记录最大的信息增益，及对应的特征分量索引
@@ -104,8 +104,23 @@ def chooseBestFeatureToSplit(dataSet):
             bestFeature = i
     return bestFeature
 
-def test():
-    dataSet_1,labels,ddataSet_2 = createDataSet()
-    chooseBestFeatureToSplit(dataSet_1)
+def majorityCnt(classList):
+    '''
+    类型统计并排序，返回数量最多的类型名
+    '''
+    # 统计类名频数
+    classCount ={}
+    for vote in classList:
+        if vote not in classCount.keys():
+            classCount[vote]=0
+        classCount[vote] += 1
+    # 对 classCount 的统计值排序
+    sortedClassCount=sorted(classCount.items(), key = lambda x: x[1], reverse = True)
+    return sortedClassCount[0][0] #返回数量排名第一的类型名
 
-test()
+
+# def test():
+#     dataSet_1,labels,ddataSet_2 = createDataSet()
+#     chooseBestFeatureToSplit(dataSet_1)
+
+# test()
