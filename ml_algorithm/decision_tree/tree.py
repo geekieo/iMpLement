@@ -12,7 +12,7 @@ def calcShannonEnt(dataSet):
     '''
     numEntries = len(dataSet)   #样本数
     labelCounts = {}    #key:label，value：counts
-    # 为所有类别创建字典 label:统计计数(5行)
+    # 为所有类别 labels 创建字典，统计计数
     for featVec in dataSet:
         currentLabel = featVec[-1]
         if currentLabel not in labelCounts.keys():
@@ -32,8 +32,9 @@ def calcShannonEnt(dataSet):
 def createDataSet():
     '''
     dataSet 格式说明：
-        按行看，最后一列为样本标签，其余列为特征分量
-        按列看，不同取值为特征分量的不同结点，同一取值为同一结点
+        一行为一个样本 example
+        最后一列为样本标签 label，其余列为特征分量 feature vector,包含一至多个feature
+        不同取值为特征分量的不同结点，同一取值为同一结点，结点为特征类型 class（有别于label）
     dataSet 数据格式：
         数据必须是一种由列表元素组成的列表，而且所有的列表元素都要具有相同的数据长度；
         每一行为一个样本，每个样本有1到多个特征分量，按列的形式顺序存储
@@ -89,7 +90,7 @@ def chooseBestFeatureToSplit(dataSet):
     for i in range(numFeatures):
         #1 创建唯一的特征分量列表
         featList = [example[i] for example in dataSet] #提取全部数据集的第i列元素
-        uniqueVals = set(featList) #归纳结点类别
+        uniqueVals = set(featList) # 分支结点，特征分量的结点类型
         
         newEntropy = 0.0
         #2 遍历结点类型，计算的加权信息熵
@@ -104,23 +105,41 @@ def chooseBestFeatureToSplit(dataSet):
             bestFeature = i
     return bestFeature
 
-def majorityCnt(classList):
+def majorityCnt(labelList):
     '''
-    类型统计并排序，返回数量最多的类型名
+    labels数量统计并排序，返回数量最多的类型名
     '''
     # 统计类名频数
-    classCount ={}
-    for vote in classList:
-        if vote not in classCount.keys():
-            classCount[vote]=0
-        classCount[vote] += 1
-    # 对 classCount 的统计值排序
-    sortedClassCount=sorted(classCount.items(), key = lambda x: x[1], reverse = True)
-    return sortedClassCount[0][0] #返回数量排名第一的类型名
+    labelCount ={}
+    for vote in labelList:
+        if vote not in labelCount.keys():
+            labelCount[vote]=0
+        labelCount[vote] += 1
+    # 对 labelCount 排序
+    sortedLabelCount=sorted(labelCount.items(), key = lambda x: x[1], reverse = True)
+    return sortedLabelCount[0][0] #返回数量最多的label
+
+def createTree(dataSet, featLabels):
+    labelList = [example[-1] for example in dataSet]
+    # 迭代结束条件1：label 完全相同则停止划分,返回label
+    if labelList.count(labelList[0])==len(labelList):
+        return labelList[0]
+    # 迭代结束条件2：遍历完所有特征，返回次数最多的 label
+    if len(dataSet[0]) == 1:
+        return majorityCnt(dataSet[0])
+    bestFeatIndex=chooseBestFeatureToSplit(dataSet)
+    bestFeatLabel = featLabels[bestFeatIndex]
+    myTree = {bestFeatLabel:{}} #字典嵌套，存储树结构
+    # 得到列表包含的所有属性值
+    del(featLabels[bestFeatIndex]) #去除结点的分量，使featLabels收敛
+    featValues = [example[bestFeatIndex] for example in dataSet]
+    uniqueVals = set(featValues) #分支结点
+    #进入递归迭代
+    for value in uniqueVals:
+        subLabel = featLabels[:]
 
 
-# def test():
+# def chooseBestFeatureTest():
 #     dataSet_1,labels,ddataSet_2 = createDataSet()
 #     chooseBestFeatureToSplit(dataSet_1)
-
-# test()
+# chooseBestFeatureTest()
