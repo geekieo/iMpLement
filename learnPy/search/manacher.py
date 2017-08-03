@@ -26,8 +26,12 @@ def manacher(s):
     return  RL
 
 def test():
-    s ="swifngnfngnfiw"
+    s ="ajafajafb"
     RL = manacher(s)
-    print(RL)
+    newRL= []
+    for i in range(len(RL)):
+        if i%2==1:
+            newRL.append(RL[i]-1)
+    print(newRL)
 
 test()
