@@ -46,9 +46,10 @@ def createDataSet():
                 [0, 1, 'no'],
                 [0, 1, 'no']]
     labels = ['no surfacing','flippers']
-    dataSet2 = copy.deepcopy(dataSet) #内存拷贝，真拷贝
-    dataSet2[0][-1] = 'maybe'
-    return dataSet, labels, dataSet2
+    # dataSet2 = copy.deepcopy(dataSet) #内存拷贝，真拷贝
+    # dataSet2[0][-1] = 'maybe'
+    # print(dataSet,dataSet2)
+    return dataSet, labels
 
 
 def splitDataSet(dataSet, axis, value):
@@ -119,27 +120,37 @@ def majorityCnt(labelList):
     sortedLabelCount=sorted(labelCount.items(), key = lambda x: x[1], reverse = True)
     return sortedLabelCount[0][0] #返回数量最多的label
 
+# def chooseBestFeatureTest():
+#     dataSet_1,labels = createDataSet()
+#     chooseBestFeatureToSplit(dataSet_1)
+# chooseBestFeatureTest()
+
 def createTree(dataSet, featLabels):
     labelList = [example[-1] for example in dataSet]
-    # 迭代结束条件1：label 完全相同则停止划分,返回label
+    # 迭代结束条件1：label 完全相同，统计 labelList[0]，返回label
     if labelList.count(labelList[0])==len(labelList):
         return labelList[0]
-    # 迭代结束条件2：遍历完所有特征，返回次数最多的 label
+    # 迭代结束条件2：遍历完所有特征分量，返回次数最多的 label
     if len(dataSet[0]) == 1:
         return majorityCnt(dataSet[0])
     bestFeatIndex=chooseBestFeatureToSplit(dataSet)
     bestFeatLabel = featLabels[bestFeatIndex]
     myTree = {bestFeatLabel:{}} #字典嵌套，存储树结构
     # 得到列表包含的所有属性值
-    del(featLabels[bestFeatIndex]) #去除结点的分量，使featLabels收敛
+    del(featLabels[bestFeatIndex]) #去除这维特征分量，使 feature vector 收敛
     featValues = [example[bestFeatIndex] for example in dataSet]
     uniqueVals = set(featValues) #分支结点
     #进入递归迭代
     for value in uniqueVals:
         subLabel = featLabels[:]
+        myTree[bestFeatLabel][value] = createTree(splitDataSet
+        (dataSet, bestFeatIndex, value), subLabel)
+    return myTree
 
+def createTreeTest():
+    dataSet_1, labels = createDataSet()
+    myTree = createTree(dataSet_1,labels)
+    print(myTree)
+    #{'no surfacing': {0: 'no', 1: {'flippers': {0: 'no', 1: 'yes'}}}}
+createTreeTest()
 
-# def chooseBestFeatureTest():
-#     dataSet_1,labels,ddataSet_2 = createDataSet()
-#     chooseBestFeatureToSplit(dataSet_1)
-# chooseBestFeatureTest()
