@@ -54,7 +54,7 @@ def createDataSet():
 
 def splitDataSet(dataSet, axis, value):
     '''
-    name：结点划分，子核心步骤
+    name：结点划分，chooseBestFeatureToSplit()调用
     parameter：
         dataSet: 二维特征集
         axis：列索引，即特征分量索引
@@ -77,7 +77,7 @@ def splitDataSet(dataSet, axis, value):
 
 def chooseBestFeatureToSplit(dataSet):
     '''
-    description：找出使分类结果熵最大的特征分量，这是决策树的核心步骤
+    description：找出使分类结果熵最大的特征分量，选择决策层的核心算法
     parameter：[特征分量,label]
     loop: 
         特征分量，对每个结点统计其特征样本集label的熵，对所有结点做加权和
@@ -133,9 +133,11 @@ def majorityCnt(labelList):
 
 def createTree(dataSet, featlabels):
     '''
-    对每一组（子）数据集，查找最佳划分特征分量，构建一层树，
-    对分量各结点 createTree()，输入样本集需删除该分量
-    直到（子）数据集 label 一致，或特征分量删减结束为止
+    name: 递归创建树，决策树核心算法
+    description:
+        对每一组（子）数据集 ，查找最佳划分特征分量，构建一层树，
+        对分量各结点 createTree()，输入样本集需删除该分量
+        直到（子）数据集 label 一致，或特征分量删减结束为止
     '''
     labelList = [example[-1] for example in dataSet]
     # 迭代结束条件1：label 完全相同，统计 labelList[0]，返回label
