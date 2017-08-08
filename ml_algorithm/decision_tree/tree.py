@@ -140,13 +140,13 @@ def createTree(dataSet, featlabels):
     labelList = [example[-1] for example in dataSet]
     # 迭代结束条件1：label 完全相同，统计 labelList[0]，返回label
     if labelList.count(labelList[0]) == len(labelList):
-        return labelList[0]
+        return labelList[0] #{结点: 标签}
     # 迭代结束条件2：遍历完所有特征分量，返回标签最多的 label
     if len(dataSet[0]) == 1:
-        return majorityCnt(dataSet[0])
+        return majorityCnt(dataSet[0]) #{结点: 标签}
     bestFeatIndex = chooseBestFeatureToSplit(dataSet)
     bestFeatLabel = featlabels[bestFeatIndex] # 特征分量名称
-    myTree = {bestFeatLabel: {}}  # 创建一层树，字典嵌套
+    myTree = {bestFeatLabel: {}}  # 创建一层树，{最佳特征：{结点：树}}
     # 得到列表包含的所有属性值
     del (featlabels[bestFeatIndex])  # 从特征分量名称里删除这维特征分量，使 featlabels 收敛
     featValues = [example[bestFeatIndex] for example in dataSet]
@@ -154,8 +154,8 @@ def createTree(dataSet, featlabels):
     # 对各结点 createTree，进入 createTree() 递归迭代
     for value in uniqueVals:
         subLabel = featlabels[:]
-        # 构建树，对每个
-        # 结点 create tree
+        # 构建树，对每个结点子数据集 create tree
+        # 使用二维字典{bestFeatLabel:{value:createTree(), value: label}}
         myTree[bestFeatLabel][value] = createTree(
             splitDataSet(dataSet, bestFeatIndex, value), subLabel)
     return myTree
