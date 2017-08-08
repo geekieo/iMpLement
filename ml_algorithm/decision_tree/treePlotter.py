@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 
+plt.rcParams['font.sans-serif']=['SimHei'] #设置字体编码为黑体
 # 定义文本框和箭头格式
 decisionNode = dict(boxstyle="sawtooth", fc="0.8")
 leafNode = dict(boxstyle="round4", fc="0.8")
