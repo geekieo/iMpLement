@@ -4,6 +4,10 @@
 from numpy import *
 
 def sigmoid(inX):
+    '''
+    函数：f(z) = 1 / (1 + exp( − z))
+    导数：f(z)' = f(z)(1 − f(z))
+    '''
     return 1.0 / (1 + exp(-inX))
 
 
@@ -24,7 +28,7 @@ def gradAscent(dataMatIn, labels):
         # 矩阵相乘，对每个样本的特征项求加权和，结果再输入sigmoid
         h = sigmoid(dataMatrix * weights) # h为m行1列矩阵，没有sigmoid为线性回归
         error = (labelMat - h)
-        weights = weights + alpha * dataMatrix.transpose() * error
+        weights = weights + alpha * dataMatrix.transpose() * error # 得益于 sigmoid 求导
         if abs(sum(error)/len(error)) < 0.01: # 迭代结束条件2：误差小于1%
             break
     return weights
