@@ -34,7 +34,7 @@ def createDataSet():
     dataSet 格式说明：
         一行为一个样本 example
         最后一列为样本标签 label，其余列为特征分量 feature vector,包含一至多个feature
-        不同取值为特征分量的不同结点，同一取值为同一结点，结点为特征类型 class（有别于label）
+        不同取值为特征分量的不同结点，同一取值为同一结点，结点为特征类型 class（从属于一个feature）
     dataSet 数据格式：
         数据必须是一种由列表元素组成的列表，而且所有的列表元素都要具有相同的数据长度；
         每一行为一个样本，每个样本有1到多个特征分量，按列的形式顺序存储
@@ -45,14 +45,14 @@ def createDataSet():
                [1, 0, 'no'], 
                [0, 1, 'no'],
                [0, 1, 'no']]
-    featlabels = ['no surfacing', 'flippers']  #列分量参数意义
+    featNames = ['no surfacing', 'flippers']  #列分量参数意义
     # dataSet2 = copy.deepcopy(dataSet) #内存拷贝，真拷贝
     # dataSet2[0][-1] = 'maybe'
     # print(dataSet,dataSet2)
-    return dataSet, featlabels
+    return dataSet, featNames
 
 
-def splitDataSet(dataSet, axis, value):
+def splitDataSet(dataSet, axis, node):
     '''
     name：结点划分，chooseBestFeatureToSplit()调用
     parameter：
@@ -61,13 +61,13 @@ def splitDataSet(dataSet, axis, value):
         value：分量结点的值，划分依据，featVec[i][axis] 为同一个 value，则该特征样本为同一结点
     principle：设 dataSet 中的特征样本为 featVec[i]，
     对给定的 axis 下标，遍历 featVec[axis]，
-    选择 featVec[axis]==value 的样本，组成新的 retDataSet ,同样是一个二维 list
+    选择 featVec[axis]==node 的样本，组成新的 retDataSet ,同样是一个二维 list
     '''
     #1 创建用于存放剔除 featVec[axis] 后的样本列表
     retDataSet = []
     for featVec in dataSet:
-        if featVec[axis] == value:
-            #2 遍历 axis 位置，抽取等于 value 的特征样本
+        if featVec[axis] == node:
+            #2 遍历 axis 位置，抽取等于 node 的特征样本
             #  这里跳过 featVec[axis]  ，留下了其他分量，这一步保证了找到结点后迭代的收敛
             reducedFeatVec = featVec[:axis]
             reducedFeatVec.extend(featVec[axis + 1:])
@@ -92,12 +92,12 @@ def chooseBestFeatureToSplit(dataSet):
     for i in range(numFeatures):
         #1 创建唯一的特征分量列表
         featList = [example[i] for example in dataSet]  #提取全部数据集的第i列元素
-        uniqueVals = set(featList)  # 分支结点，特征分量的结点类型
+        uniqueNodes = set(featList)  # 分支结点，特征分量的结点类型
 
         newEntropy = 0.0
         #2 遍历结点类型，计算的加权信息熵
-        for value in uniqueVals:
-            subDataSet = splitDataSet(dataSet, i, value)
+        for node in uniqueNodes:
+            subDataSet = splitDataSet(dataSet, i, node)
             prob = len(subDataSet) / float(len(dataSet))  #结点权重
             newEntropy += prob * calcShannonEnt(
                 subDataSet)  #结点信息熵加权和，同类有序，分类减熵，加权和不会大过原始熵
@@ -131,7 +131,7 @@ def majorityCnt(labelList):
 # chooseBestFeatureTest()
 
 
-def createTree(dataSet, featlabels):
+def createTree(dataSet, featNames):
     '''
     name: 递归创建树，决策树核心算法
     description:
@@ -147,25 +147,25 @@ def createTree(dataSet, featlabels):
     if len(dataSet[0]) == 1:
         return majorityCnt(dataSet[0]) #{结点: 标签}
     bestFeatIndex = chooseBestFeatureToSplit(dataSet)
-    bestFeatLabel = featlabels[bestFeatIndex] # 特征分量名称
+    bestFeatLabel = featNames[bestFeatIndex] # 特征分量名称
     myTree = {bestFeatLabel: {}}  # 创建一层树，{最佳特征：{结点：树}}
     # 得到列表包含的所有属性值
-    del (featlabels[bestFeatIndex])  # 从特征分量名称里删除这维特征分量，使 featlabels 收敛
+    del (featNames[bestFeatIndex])  # 从特征分量名称里删除这维特征分量，使 featNames 收敛
     featValues = [example[bestFeatIndex] for example in dataSet]
-    uniqueVals = set(featValues)  # 分支结点
+    uniqueNodes = set(featValues)  # 分支结点
     # 对各结点 createTree，进入 createTree() 递归迭代
-    for value in uniqueVals:
-        subLabel = featlabels[:]
+    for node in uniqueNodes:
+        subLabel = featNames[:]
         # 构建树，对每个结点子数据集 create tree
-        # 使用二维字典{bestFeatLabel:{value:createTree(), value: label}}
-        myTree[bestFeatLabel][value] = createTree(
-            splitDataSet(dataSet, bestFeatIndex, value), subLabel)
+        # 使用二维字典{bestFeatLabel:{node:createTree(), node: label}}
+        myTree[bestFeatLabel][node] = createTree(
+            splitDataSet(dataSet, bestFeatIndex, node), subLabel)
     return myTree
 
 
 def createTreeTest():
-    dataSet_1, featlabels = createDataSet()
-    myTree = createTree(dataSet_1, featlabels)
+    dataSet_1, featNames = createDataSet()
+    myTree = createTree(dataSet_1, featNames)
     print(myTree)
     #{'no surfacing': {0: 'no', 1: {'flippers': {0: 'no', 1: 'yes'}}}}
 

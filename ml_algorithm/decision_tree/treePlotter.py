@@ -25,8 +25,8 @@ def createPlot():
     fig = plt.figure(1, facecolor='white')
     fig.clf()
     createPlot.ax1 = plt.subplot(111, frameon=False)
-    plotNode(U'决策节点', (0.5, 0.1), (0.1, 0.5), decisionNode)
-    plotNode(U'叶节点', (0.8, 0.1), (0.3, 0.8), leafNode)
+    plotNode(U'决策结点', (0.5, 0.1), (0.1, 0.5), decisionNode) #featName
+    plotNode(U'决策类型结点', (0.8, 0.1), (0.3, 0.8), leafNode) #node
     plt.show()
 
 
