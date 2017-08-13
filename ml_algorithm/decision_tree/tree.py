@@ -170,4 +170,4 @@ def createTreeTest():
     #{'no surfacing': {0: 'no', 1: {'flippers': {0: 'no', 1: 'yes'}}}}
 
 
-createTreeTest()
+# createTreeTest()
