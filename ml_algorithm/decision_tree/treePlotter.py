@@ -3,7 +3,6 @@
 """
 
 import matplotlib.pyplot as plt
-from tree import *
 
 plt.rcParams['font.sans-serif']=['SimHei'] #设置字体编码为黑体
 # 定义文本框和箭头格式
@@ -110,7 +109,7 @@ def getTreeDepth(myTree):
 
 def retrieveTree(i):
     '''
-    测试树
+    生成测试树数据
     '''
     listOfTrees=[{'no surfacing':{0:'no',1:{'flippers':{
         0:{'head':{0:'no',1:'yes'}},1:'no'}}}},
