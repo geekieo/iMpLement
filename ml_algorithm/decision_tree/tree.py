@@ -59,9 +59,10 @@ def splitDataSet(dataSet, axis, node):
         dataSet: 二维特征集
         axis：列索引，即特征分量索引
         value：分量结点的值，划分依据，featVec[i][axis] 为同一个 value，则该特征样本为同一结点
-    principle：设 dataSet 中的特征样本为 featVec[i]，
-    对给定的 axis 下标，遍历 featVec[axis]，
-    选择 featVec[axis]==node 的样本，组成新的 retDataSet ,同样是一个二维 list
+    principle：
+        设 dataSet 中的特征样本为 featVec[i]，
+        对给定的 axis 下标，遍历 featVec[axis]，
+        选择 featVec[axis]==node 的样本，组成新的 retDataSet ,同样是一个二维 list
     '''
     #1 创建用于存放剔除 featVec[axis] 后的样本列表
     retDataSet = []
@@ -131,13 +132,16 @@ def majorityCnt(labelList):
 # chooseBestFeatureTest()
 
 
-def createTree(dataSet, featNames):
+def createTree(dataSet, featNames = None):
     '''
     name: 递归创建树，决策树核心算法
     description:
         对每一组（子）数据集 ，查找最佳划分特征分量，构建一层树，
         对分量各结点 createTree()，输入样本集需删除该分量
         直到（子）数据集 label 一致，或特征分量删减结束为止
+    param: 
+        dataSet: 样本集，不变变量,每一行为一个样本
+        featNames: 特征名称列表，可变变量，请使用 featNames.copy() 作为入参
     '''
     labelList = [example[-1] for example in dataSet]
     # 迭代结束条件1：label 完全相同，统计 labelList[0]，返回label
@@ -147,8 +151,8 @@ def createTree(dataSet, featNames):
     if len(dataSet[0]) == 1:
         return majorityCnt(dataSet[0]) #{结点: 标签}
     bestFeatIndex = chooseBestFeatureToSplit(dataSet)
-    bestFeatLabel = featNames[bestFeatIndex] # 特征分量名称
-    myTree = {bestFeatLabel: {}}  # 创建一层树，{最佳特征：{结点：树}}
+    bestFeatName = featNames[bestFeatIndex] # 特征分量名称
+    myTree = {bestFeatName: {}}  # 创建一层树，{最佳特征：{结点：树}}
     # 得到列表包含的所有属性值
     del (featNames[bestFeatIndex])  # 从特征分量名称里删除这维特征分量，使 featNames 收敛
     featValues = [example[bestFeatIndex] for example in dataSet]
@@ -157,8 +161,8 @@ def createTree(dataSet, featNames):
     for node in uniqueNodes:
         subLabel = featNames[:]
         # 构建树，对每个结点子数据集 create tree
-        # 使用二维字典{bestFeatLabel:{node:createTree(), node: label}}
-        myTree[bestFeatLabel][node] = createTree(
+        # 使用二维字典{bestFeatName:{node:createTree(), node: label}}
+        myTree[bestFeatName][node] = createTree(
             splitDataSet(dataSet, bestFeatIndex, node), subLabel)
     return myTree
 
