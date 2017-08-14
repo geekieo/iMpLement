@@ -67,6 +67,7 @@ def plotBestFit(weights):
     xcord2 = []
     ycord2=[]
     for i in range(n):
+        # 样本按标签分成两组
         if int(labelMat[i]) == 1:
             xcord1.append(dataArr[i,1])
             ycord1.append(dataArr[i,2])
@@ -74,9 +75,9 @@ def plotBestFit(weights):
             xcord2.append(dataArr[i,1])
             ycord2.append(dataArr[i,2])
     fig = plt.figure()
-    ax = fig.add_subplot(111)
-    ax.scatter(xcord1, ycord1, s=30, c='red', marker = 's') # 样本点样式
-    ax.scatter(xcord2, ycord2, s=30, c='green')
+    ax = fig.add_subplot(111) # 子图划分成 1 行 1 列，绘制在第1块区域
+    ax.scatter(xcord1, ycord1, s=30, c='red', marker = 's') # 标签为1的样本点样式
+    ax.scatter(xcord2, ycord2, s=30, c='green') #标签为0的样本点样式
     x = arange(-3.0, 3.0, 0.1)
     y = (-weights[0]-weights[1]*x)/weights[2] # 最佳拟合直线
     ax.plot(x,y)
