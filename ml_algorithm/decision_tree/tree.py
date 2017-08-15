@@ -134,7 +134,7 @@ def majorityCnt(labelList):
 
 def createTree(dataSet, featNames = None):
     '''
-    name: 递归创建树，决策树核心算法
+    name: 递归创建树，决策树主程序
     description:
         对每一组（子）数据集 ，查找最佳划分特征分量，构建一层树，
         对分量各结点 createTree()，输入样本集需删除该分量

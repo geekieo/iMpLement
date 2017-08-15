@@ -2,17 +2,19 @@
 逻辑回归梯度上升，求分类线
 """
 from numpy import *
+import matplotlib.pyplot as plt
+
 
 def sigmoid(inX):
     '''
-    函数：f(x) = 1 / (1 + exp(−x))
-    导数：f(x)' = f(x)(1 − f(x))
-    作用：将(-∞，∞)映射到(0,1)，使输出结果和标签区间一致
+    函数: f(x) = 1 / (1 + exp(−x))
+    导数: f(x)' = f(x)(1 − f(x))
+    作用: 将(-∞，∞)映射到(0,1)，使输出结果和标签区间一致
     '''
     return 1.0 / (1 + exp(-inX))
 
 
-def gradAscent(dataMatIn, labels):
+def gradAscent(dataMatIn, labels, plotLive = False):
     '''
     dataMatIn 为二维的numpy矩阵
     '''
@@ -31,6 +33,8 @@ def gradAscent(dataMatIn, labels):
         error = (labelMat - h)
         # 该求导方法得益于 sigmoid 求导。weights 由 array 类型自动转换成 matrix 类型
         weights = weights + alpha * dataMatrix.transpose() * error 
+        if plotLive == True:
+            plotFit(weights)
         if abs(sum(error)/len(error)) < 0.01: # 迭代结束条件2：误差均值小于1%
             break
     return weights
@@ -53,12 +57,9 @@ def logRegTest():
     print(weights)
     # maxCycles=500， weights == [[ 4.12414349] /n[ 0.48007329] /n[-0.6168482 ]]
 
-
-def plotBestFit(weights):
-    '''
-    绘制决策面
-    '''
-    import matplotlib.pyplot as plt
+def plotFit(weights):
+    if type(weights).__name__=="matrix":
+        weights = array(weights)
     dataMat,labelMat = loadDataSet()
     dataArr = array(dataMat)
     n=shape(dataMat)[0] # dataMat 行数, 即样本数
@@ -74,20 +75,23 @@ def plotBestFit(weights):
         else:
             xcord2.append(dataArr[i,1])
             ycord2.append(dataArr[i,2])
-    fig = plt.figure()
+    fig = plt.figure() #创建新图
     ax = fig.add_subplot(111) # 子图划分成 1 行 1 列，绘制在第1块区域
     ax.scatter(xcord1, ycord1, s=30, c='red', marker = 's') # 标签为1的样本点样式
     ax.scatter(xcord2, ycord2, s=30, c='green') #标签为0的样本点样式
-    x = arange(-3.0, 3.0, 0.1)
-    y = (-weights[0]-weights[1]*x)/weights[2] # 最佳拟合直线
+    # 绘制直线
+    x = arange(-3.0, 3.0, 0.1) #直线绘制区间
+    y = (-weights[0]-weights[1]*x)/weights[2] # 拟合分类线
     ax.plot(x,y)
+    # 坐标注释
     plt.xlabel('X1')
     plt.ylabel("X2")
     plt.show()
-        
-def plotBestFitTest():
-    dataMat, labelMat = loadDataSet()
-    weights = gradAscent(dataMat, labelMat) # weights 为 numpy.matrix 类型
-    plotBestFit(weights.getA()) # getA()，返回其 numpy.array 类型
+  
 
-plotBestFitTest()
+def plotFitTest():
+    dataMat, labelMat = loadDataSet()
+    weights = gradAscent(dataMat, labelMat)
+    plotFit(weights)
+
+plotFitTest()
