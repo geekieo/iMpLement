@@ -26,11 +26,13 @@ plt.title("bar")
 import numpy as np
 delta = 0.025
 x = y = np.arange(-3.0, 3.0, delta) #返回一个等差数组
-X, Y = np.meshgrid(x, y)
-Z    = Y**2 + X**2
+# X为等差数组按行复制矩阵，Y为等差数组转置按列复制矩阵
+# X Y 为一组二维正交边缘卷积核
+X, Y = np.meshgrid(x, y) 
+Z    = Y**2 + X**2 # 同心圆
 
 plt.subplot(235)
-plt.contour(X,Y,Z)
+plt.contour(X,Y,Z) #凸平面等高线
 plt.colorbar()
 plt.title("contour")
 
