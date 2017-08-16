@@ -1,5 +1,5 @@
 '''
-有点像 lamdba 演算
+闭包，类似 lamdba 演算
 '''
 def greeting_conf(prefix):
     def greeting(name):
