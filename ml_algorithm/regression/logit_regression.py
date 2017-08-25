@@ -31,7 +31,9 @@ def gradAscent(dataMatIn, labels, plotLive = False):
         # 矩阵相乘，对每个样本的特征项求加权和，结果再输入sigmoid
         h = sigmoid(dataMatrix * weights) # h为m行1列矩阵，没有sigmoid为线性回归
         error = (labelMat - h)
-        # 该求导方法得益于 sigmoid 求导（待商榷）。weights 由 array 类型自动转换成 matrix 类型
+        # (批)梯度下降法更新权值。
+        # 更新规则来自对误差函数(含sigmoid)求导和极大似然估计，结果和线性回归更新规则一样。
+        # weights 由 array 类型自动转换成 matrix 类型
         weights = weights + alpha * dataMatrix.transpose() * error 
         if plotLive == True:
             continue # TO DO
