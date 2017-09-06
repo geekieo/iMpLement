@@ -1,5 +1,5 @@
 """
-动漫图人脸图像提取
+提取动漫图人脸图像
 使用 OpenCV 训练的LBP动漫人脸检测分类器裁剪人脸图像
 Reference: https://github.com/nagadomi/lbpcascade_animeface
 """
