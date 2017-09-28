@@ -37,20 +37,25 @@ def GMM(dataMat,k_or_centroids):
         k = len(k_or_centroids)
         centroids = k_or_centroids
 
-    # 初始化参数
+    ## 初始化参数
     # pMiu:样本均值向量；pPi:模型概率向量；pSigma:协方差矩阵
     [pMiu, pPi, pSigma] = init_params(dataMat, centroids, k, N, D)
     preLoss = -inf #上一轮聚类的误差
 
     # EM Algorithm
     while True:
-        # Estimation Step
+        ## Estimation Step
         Px = calc_prob(pMiu,pSigma,dataMat,k,N,D)
         # pGamma[i,k] : xi由第k个Gaussian生成的概率；xi中由第k个Gaussian生成的比例
         # 分子 = pi(k) * N(xi | pMiu(k), pSigma(k)) 
-        pGamma = mat(array(Px)*array(tile(pPi,(N,1)))) # tile() 把 pPi 复制成 N行1列 的 array 
         # 分母 = Σ pi(j) * N(xi | pMiu(j), pSigma(j)),对所有Gaussian j∈[1,K] 得到的概率求和
+        pGamma = mat(array(Px)*array(tile(pPi,(N,1)))) # tile() 把 pPi 复制成 N行1列 的 array 
         pGamma = pGamma / tile(sum(pGamma,axis=1),(1,k))
+        ## Maximization Step - through Maximize likelihood Estimation
+        # print 'dtpyedddddddd:',pGamma.dtype
+        Nk = sum(pGamme, axis=0) #Nk(l*k) = 第k个高斯生成每个样本的概率和，所有Nk总和为N
+        
+
 
 
 
