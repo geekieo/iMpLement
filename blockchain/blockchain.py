@@ -20,14 +20,30 @@ class Blockchain(object):
 		self.chain = []
 		self.current_trainscations = []
 		
-	def new_block(self):
-		# 创建新块，加入链条
+		# 创建起源区块
+		self.new_block(previous_hash = 1, proof = 100)
+
+	def new_block(self, proof, previous_hash = None):
+		# 创建新块，并加入链条
 		pass
 		
 	def new_transaction(self):
-		# 添加一次新的交易到交易列表中
-		pass
+		"""
+		添加一次新的交易到交易列表，
+		返回这个交易将会被添加的区块索引，即下一个将被开采的区块
+		param sender: <str> 发出人地址
+		param recipient: <str> 接收人地址
+		return: <int> 保存本次交易的块的索引
+		"""
 		
+		self.current_trainscations.append({
+			'sender': sender,
+			'recipient': recipient,
+			'amount': amount,
+		})
+		
+		return self.last_block['index'] + 1
+
 	@staticmethod
 	def hash(block):
 		# 计算一个 bolck 的 hash 值
