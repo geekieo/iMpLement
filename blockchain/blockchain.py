@@ -27,13 +27,14 @@ class Blockchain(object):
 		# 创建新块，并加入链条
 		pass
 		
-	def new_transaction(self):
+	def new_transaction(self,sender, recipient, amount):
 		"""
 		添加一次新的交易到交易列表，
 		返回这个交易将会被添加的区块索引，即下一个将被开采的区块
 		param sender: <str> 发出人地址
 		param recipient: <str> 接收人地址
-		return: <int> 保存本次交易的块的索引
+		param amount: <int> 金额
+		return: <int> 保存这一次交易的块的索引
 		"""
 		
 		self.current_trainscations.append({
