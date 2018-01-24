@@ -272,7 +272,7 @@ def new_transaction():
     
     # Check that the required fields are in the POST'ed data
     required = ['sender', 'recipient', 'amount']
-    if not all(k in values for k in required):
+    if not all([k in values for k in required]):
         return 'Missing values', 400
 
     # Create a new Transaction
