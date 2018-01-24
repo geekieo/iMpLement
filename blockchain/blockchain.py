@@ -1,8 +1,9 @@
 import hashlib
 import json
-
+from textwrap import dedent
 from time import time
 from uuid import uuid4
+from flask import Flask
 
 
 class Blockchain(object):
@@ -46,10 +47,10 @@ class Blockchain(object):
 			'previous_hash': previous_hash or self.hash(self.chain[-1]), 
 		}
 		# 重置当前的交易列表
-        self.current_transactions = []
-
-        self.chain.append(block)
-        return block
+		self.current_transactions = []
+		
+		self.chain.append(block)
+		return block
 
 
 	def new_transaction(self,sender, recipient, amount):
@@ -79,8 +80,8 @@ class Blockchain(object):
         :return: <str>
         """
         # 我们必须确保dict是有序的，否则会得到不一致的hash值
-        block_string = json.dumps(block, sort_keys=True).encode()
-        return hashlib.sha256(block_string).hexdigest()
+		block_string = json.dumps(block, sort_keys=True).encode()
+		return hashlib.sha256(block_string).hexdigest()
 	
 
 	@property
@@ -107,18 +108,20 @@ class Blockchain(object):
 		return proof
 
 
-    @staticmethod
-    def valid_proof(last_proof, proof):
-        """
-        验证proof：hash(last_proof,proof)是否以4个0开头
 
-        :param last_proof: <int> 上一个roof
-        :param proof: <int> 当前的 Proof
-        :return: <bool> True为正确.
+	@staticmethod
+	def valid_proof(last_proof, proof):
+		"""
+		验证proof：hash(last_proof,proof)是否以4个0开头
+
+		:param last_proof: <int> 上一个roof
+		:param proof: <int> 当前的 Proof
+		:return: <bool> True为正确.
         """
-        guess = f'{last_proof}{proof}'.encode()
-        guess_hash = hashlib.sha256(guess).hexdigest()
-        return guess_hash[:4] == "0000"
+		guess = f'{last_proof}{proof}'.encode()	# PEP498 in python 3.6
+		guess_hash = hashlib.sha256(guess).hexdigest()
+		return guess_hash[:4] == "0000"
+
 
 '''
 Blockchain API
@@ -179,27 +182,29 @@ def mine():
 
 @app.route('/transactions/new', methods=['POST'])
 def new_transaction():
-    '''
+	'''
 	交易节点
 	接收post请求，因为我们要给它发数据
 	'''
 	values = request.get_json()
+	
+	# Check that the required fields are in the POST'ed data
+	required = ['sender', 'recipient', 'amount']
+	if not all(k in values for k in required):
+		return 'Missing values', 400
 
-    # Check that the required fields are in the POST'ed data
-    required = ['sender', 'recipient', 'amount']
-    if not all(k in values for k in required):
-        return 'Missing values', 400
+	# Create a new Transaction
+	index = blockchain.new_transaction(values['sender'], values['recipient'], values['amount'])
 
-    # Create a new Transaction
-    index = blockchain.new_transaction(values['sender'], values['recipient'], values['amount'])
-
-    response = {'message': f'Transaction will be added to Block {index}'}
-    return jsonify(response), 201
+	response = {'message': f'Transaction will be added to Block {index}'}
+	return jsonify(response), 201
 
 
 @app.route('/chain', methods=['GET'])
 def full_chain():
-    '''创建/chain节点，返回全部的区块链'''
+    '''
+	创建/chain节点，返回全部的区块链
+	'''
     response = {
         'chain': blockchain.chain,
         'length': len(blockchain.chain),
@@ -208,4 +213,3 @@ def full_chain():
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
-
