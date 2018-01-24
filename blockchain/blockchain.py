@@ -119,3 +119,46 @@ class Blockchain(object):
         guess = f'{last_proof}{proof}'.encode()
         guess_hash = hashlib.sha256(guess).hexdigest()
         return guess_hash[:4] == "0000"
+
+'''
+Blockchain API
+描述：使用 flask web 微框架，让我们容易将端口映射到 python 函数的框架，
+让我们同我们的区块链通过 web 的 http 请求来通讯.
+目标:将一个 server 在区块链网络里成为一个单独节点。
+
+创建三个方法：
+/new_transactions 给一个区块创建一个新的交易
+/mine 告诉服务器挖出来一个新块
+/chain 返回整个区块链
+'''
+# Instantiate our Node 实例化节点
+app = Flask(__name__)
+
+# Generate a globally unique address for this node 给节点取一个随机名字
+node_identifier = str(uuid4()).replace('-', '')
+
+# Instantiate the Blockchain 实例化 Blockchain 类
+blockchain = Blockchain()
+
+
+@app.route('/mine', methods=['GET'])
+def mine():
+    '''创建 /mine 节点，接收 get 请求'''
+    return "We'll mine a new Block"
+  
+@app.route('/transactions/new', methods=['POST'])
+def new_transaction():
+    '''接收post请求，因为我们要给它发数据'''
+    return "We'll add a new transaction"
+
+@app.route('/chain', methods=['GET'])
+def full_chain():
+    '''创建/chain节点，返回全部的区块链'''
+    response = {
+        'chain': blockchain.chain,
+        'length': len(blockchain.chain),
+    }
+    return jsonify(response), 200
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5000)
