@@ -127,7 +127,7 @@ Blockchain API
 目标:将一个 server 在区块链网络里成为一个单独节点。
 
 创建三个方法：
-/new_transactions 给一个区块创建一个新的交易
+/transactions/new 给一个区块创建一个新的交易
 /mine 告诉服务器挖出来一个新块
 /chain 返回整个区块链
 '''
@@ -143,13 +143,59 @@ blockchain = Blockchain()
 
 @app.route('/mine', methods=['GET'])
 def mine():
-    '''创建 /mine 节点，接收 get 请求'''
-    return "We'll mine a new Block"
-  
+    '''
+	挖矿节点
+	创建 /mine 节点，接收 get 请求
+	描述：计算PoW；
+		靠给交易信息里加同意给我们1个币来奖励矿工；
+		靠把老的加到链条里来组织新的块。
+	'''
+    # 这里跑pow算法取到下一个proof值
+    last_block = blockchain.last_block
+    last_proof = last_block['proof']
+    proof = blockchain.proof_of_work(last_proof)
+
+    # 因为找到proof我们必须接收一个奖励 
+    # 发送方写0表示这个节点挖了新币
+    blockchain.new_transaction(
+        sender="0",
+        recipient=node_identifier,
+        amount=1,
+    )
+
+    # 把块加到链条中完成组装
+    previous_hash = blockchain.hash(last_block)
+    block = blockchain.new_block(proof, previous_hash)
+
+    response = {
+        'message': "New Block Forged",
+        'index': block['index'],
+        'transactions': block['transactions'],
+        'proof': block['proof'],
+        'previous_hash': block['previous_hash'],
+    }
+    return jsonify(response), 200
+
+
 @app.route('/transactions/new', methods=['POST'])
 def new_transaction():
-    '''接收post请求，因为我们要给它发数据'''
-    return "We'll add a new transaction"
+    '''
+	交易节点
+	接收post请求，因为我们要给它发数据
+	'''
+	values = request.get_json()
+
+    # Check that the required fields are in the POST'ed data
+    required = ['sender', 'recipient', 'amount']
+    if not all(k in values for k in required):
+        return 'Missing values', 400
+
+    # Create a new Transaction
+    index = blockchain.new_transaction(values['sender'], values['recipient'], values['amount'])
+
+    response = {'message': f'Transaction will be added to Block {index}'}
+    return jsonify(response), 201
+
 
 @app.route('/chain', methods=['GET'])
 def full_chain():
@@ -162,3 +208,4 @@ def full_chain():
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
+
