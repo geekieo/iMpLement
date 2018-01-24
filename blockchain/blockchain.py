@@ -5,139 +5,200 @@ from uuid import uuid4
 from urllib.parse import urlparse
 
 from flask import Flask, jsonify, request
+import requests
 
 class Blockchain(object):
-	def __init__(self):
-		self.chain = []
-		self.current_transactions = []
+    def __init__(self):
+        self.chain = []
+        self.current_transactions = []
 
-		# 创建起源区块
-		self.new_block(previous_hash = 1, proof = 100)
-		
-		self.nodes = set()
+        # 创建起源区块
+        self.new_block(previous_hash = 1, proof = 100)
+        
+        self.nodes = set()
 
-	def new_block(self, proof, previous_hash = None):
-		"""
-		在链条中创建新区块
+    """
+    共识算法
+    1.注册新节点
+    2.实现共识算法
+    """
+    def register_node(self, address): 
+        """
+        添加新节点到节点列表中
+        网络上的每个节点都应该保存其他节点的登记信息。这样的话我们需要更多的http请求节点：
+            1./nodes/register 通过url接收一系列的新节点
+            2./nodes/resolve 实现我们的共识算法，解决冲突－－确保每个节点都有正确的链条
+        
+        :param address: <str> Address of node. Eg. 'http://192.168.0.5:5000'
+        :return: None
+        """
+        parsed_url = urlparse(address)
+        self.nodes.add(parsed_url.netloc)
+        
+        
+    def valid_chain(self, chain): 
+        """
+        确定给出的链条是否合法
+        描述：循环遍历每一块，检查他们的hash和proof值是否正确
 
-		param proof: <int> 靠 PoW 算法给出来的 proof 值
-		param previous_hash:(Optional) <str> 前一区块的 hash 值
-		return: <dict> 新块
+        :param chain: <list> A blockchain
+        :return: <bool> True if valid, False if not
+        """
 
-		block 的一个例子：
-		block = {
-			'index': 1,
-			'timestamp': 1506057125.900785,
-			'transactions': [
-				{
-					'sender': "8527147fe1f5426f9dd545de4b27ee00",
-					'recipient': "a77f5cdfa2934df3954a5c7c7da5df1f",
-					'amount': 5,
-				}
-			],
-			'proof': 324984774000,
-			'previous_hash': "2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824"
-		}
-		"""
+        last_block = chain[0]
+        current_index = 1
+        
+        while current_index < len(chain):
+            block = chain[current_index]
+            print(f'{last_block}')
+            print(f'{block}')
+            print("\n-----------\n")
+            # 检查块的hash是否正确
+            if block['previous_hash'] != self.hash(last_block):
+                return False
 
-		block = {
-			'index':len(self.chain)+1,
-			'timestamp': time(),
-			'transactions':self.current_transactions,
-			'proof': proof,
-			'previous_hash': previous_hash or self.hash(self.chain[-1]), 
-		}
-		# 重置当前的交易列表
-		self.current_transactions = []
-		
-		self.chain.append(block)
-		return block
+            # 检查proof是否正确
+            if not self.valid_proof(last_block['proof'], block['proof']):
+                return False
 
+            last_block = block
+            current_index += 1
 
-	def new_transaction(self,sender, recipient, amount):
-		"""
-		在交易列表中创建一个新交易，并将交易块的索引，交给下一个创建的区块
+        return True
 
-		param sender: <str> 发出人地址
-		param recipient: <str> 接收人地址
-		param amount: <int> 金额
-		return: <int> 保存这一次交易的块的索引
-		"""
-		self.current_transactions.append({
-			'sender': sender,
-			'recipient': recipient,
-			'amount': amount,
-		})
-		
-		return self.last_block['index'] + 1
+    def resolve_conflicts(self):
+        """
+        这里是我们的共识算法，它把网络里最长的一条链来替换我们的，以解决冲突
 
+        :return: <bool> True if our chain was replaced, False if not
+        """
+        
+        neighbours = self.nodes
+        new_chain = None
 
-	@staticmethod
-	def hash(block):
-		"""
+        # 只找比我们的链条长的
+        max_length = len(self.chain)
+
+        # 从网络里取所有节点的链条来验证
+        for node in neighbours:
+            response = requests.get(f'http://{node}/chain')
+                
+            if response.status_code == 200:
+                length = response.json()['length']
+                chain = response.json()['chain']
+
+                # 检查长度是否更长，且是否合法
+                if length > max_length and self.valid_chain(chain):
+                    max_length = length
+                    new_chain = chain
+
+        # 如果发了一条比我们长的合法链，进行替换
+        if new_chain:
+            self.chain = new_chain
+            return True
+
+        return False
+
+    def new_block(self, proof, previous_hash = None):
+        """
+        在链条中创建新区块
+
+        param proof: <int> 靠 PoW 算法给出来的 proof 值
+        param previous_hash:(Optional) <str> 前一区块的 hash 值
+        return: <dict> 新块
+
+        block 的一个例子：
+        block = {
+            'index': 1,
+            'timestamp': 1506057125.900785,
+            'transactions': [
+                {
+                    'sender': "8527147fe1f5426f9dd545de4b27ee00",
+                    'recipient': "a77f5cdfa2934df3954a5c7c7da5df1f",
+                    'amount': 5,
+                }
+            ],
+            'proof': 324984774000,
+            'previous_hash': "2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824"
+        }
+        """
+
+        block = {
+            'index':len(self.chain)+1,
+            'timestamp': time(),
+            'transactions':self.current_transactions,
+            'proof': proof,
+            'previous_hash': previous_hash or self.hash(self.chain[-1]), 
+        }
+        # 重置当前的交易列表
+        self.current_transactions = []
+        
+        self.chain.append(block)
+        return block
+
+    def new_transaction(self,sender, recipient, amount):
+        """
+        在交易列表中创建一个新交易，并将交易块的索引，交给下一个创建的区块
+
+        param sender: <str> 发出人地址
+        param recipient: <str> 接收人地址
+        param amount: <int> 金额
+        return: <int> 保存这一次交易的块的索引
+        """
+        self.current_transactions.append({
+            'sender': sender,
+            'recipient': recipient,
+            'amount': amount,
+        })
+        
+        return self.last_block['index'] + 1
+
+    @staticmethod
+    def hash(block):
+        """
         给一个块创建一个sha-256的hash值
 
         :param block: <dict> 整个块
         :return: <str>
         """
         # 我们必须确保dict是有序的，否则会得到不一致的hash值
-		block_string = json.dumps(block, sort_keys=True).encode()
-		return hashlib.sha256(block_string).hexdigest()
-	
+        block_string = json.dumps(block, sort_keys=True).encode()
+        return hashlib.sha256(block_string).hexdigest()
+    
+    @property
+    def last_block(self):
+        # 返回链条中最后一个 block
+        return self.chain[-1]
 
-	@property
-	def last_block(self):
-		# 返回链条中最后一个 block
-		return self.chain[-1]
-
-
-	def proof_of_work(self, last_proof):
-		"""
-		Simple Proof of Work Algorithm:
-		简单的工作证据（PoW）算法
-			- 找到一个数字 p' ，使得 hash(pp') 的结果里以4个0开头，p是上一块里的p'
-			- p是上一块的proof值，p'是新的proof
-
-		:param last_proof: <int>
-		:return: <int>
-		"""
-
-		proof = 0
-		while self.valid_proof(last_proof, proof) is False:
-			proof += 1
-
-		return proof
-
-
-
-	@staticmethod
-	def valid_proof(last_proof, proof):
-		"""
-		验证proof：hash(last_proof,proof)是否以4个0开头
-
-		:param last_proof: <int> 上一个roof
-		:param proof: <int> 当前的 Proof
-		:return: <bool> True为正确.
+    def proof_of_work(self, last_proof):
         """
-		guess = f'{last_proof}{proof}'.encode()	# PEP498 in python 3.6
-		guess_hash = hashlib.sha256(guess).hexdigest()
-		return guess_hash[:4] == "0000"
+        Simple Proof of Work Algorithm:
+        简单的工作证据（PoW）算法
+            - 找到一个数字 p' ，使得 hash(pp') 的结果里以4个0开头，p是上一块里的p'
+            - p是上一块的proof值，p'是新的proof
 
-	"""
-	达成共识
-	"""
-	def register_node(self, address): 
-		"""
-        添加新节点到节点列表中
-		网络上的每个节点都应该保存其他节点的登记信息。这样的话我们需要更多的http请求节点：
-			1./nodes/register 通过url接收一系列的新节点
-			2./nodes/resolve 实现我们的共识算法，解决冲突－－确保每个节点都有正确的链条
-        
-		:param address: <str> Address of node. Eg. 'http://192.168.0.5:5000'
-        :return: None
+        :param last_proof: <int>
+        :return: <int>
         """
-		parsed_url = urlparse(address)
-		self.nodes.add(parsed_url.netloc)
+
+        proof = 0
+        while self.valid_proof(last_proof, proof) is False:
+            proof += 1
+
+        return proof
+
+    @staticmethod
+    def valid_proof(last_proof, proof):
+        """
+        验证proof：hash(last_proof,proof)是否以4个0开头
+
+        :param last_proof: <int> 上一个roof
+        :param proof: <int> 当前的 Proof
+        :return: <bool> True为正确.
+        """
+        guess = f'{last_proof}{proof}'.encode()    # PEP498 in python 3.6
+        guess_hash = hashlib.sha256(guess).hexdigest()
+        return guess_hash[:4] == "0000"
 
 
 '''
@@ -164,12 +225,12 @@ blockchain = Blockchain()
 @app.route('/mine', methods=['GET'])
 def mine():
     '''
-	挖矿节点
-	创建 /mine 节点，接收 get 请求
-	描述：计算PoW；
-		靠给交易信息里加同意给我们1个币来奖励矿工；
-		靠把老的加到链条里来组织新的块。
-	'''
+    挖矿节点
+    创建 /mine 节点，接收 get 请求
+    描述：计算PoW；
+        靠给交易信息里加同意给我们1个币来奖励矿工；
+        靠把老的加到链条里来组织新的块。
+    '''
     # 这里跑pow算法取到下一个proof值
     last_block = blockchain.last_block
     last_proof = last_block['proof']
@@ -199,32 +260,32 @@ def mine():
 
 @app.route('/transactions/new', methods=['POST'])
 def new_transaction():
-	'''
-	交易节点
-	接收post请求，因为我们要给它发数据
+    '''
+    交易节点
+    接收post请求，因为我们要给它发数据
 
-	这是一次交易看起来的样子，用户发给server下面的数据：
-	{ “sender”: “my address”, “recipient”: “someone else’s address”, “amount”: 5 }
-	'''
-	values = request.get_json()
-	
-	# Check that the required fields are in the POST'ed data
-	required = ['sender', 'recipient', 'amount']
-	if not all(k in values for k in required):
-		return 'Missing values', 400
+    这是一次交易看起来的样子，用户发给server下面的数据：
+    { “sender”: “my address”, “recipient”: “someone else’s address”, “amount”: 5 }
+    '''
+    values = request.get_json()
+    
+    # Check that the required fields are in the POST'ed data
+    required = ['sender', 'recipient', 'amount']
+    if not all(k in values for k in required):
+        return 'Missing values', 400
 
-	# Create a new Transaction
-	index = blockchain.new_transaction(values['sender'], values['recipient'], values['amount'])
+    # Create a new Transaction
+    index = blockchain.new_transaction(values['sender'], values['recipient'], values['amount'])
 
-	response = {'message': f'Transaction will be added to Block {index}'}
-	return jsonify(response), 201
+    response = {'message': f'Transaction will be added to Block {index}'}
+    return jsonify(response), 201
 
 
 @app.route('/chain', methods=['GET'])
 def full_chain():
     '''
-	创建/chain节点，返回全部的区块链
-	'''
+    创建/chain节点，返回全部的区块链
+    '''
     response = {
         'chain': blockchain.chain,
         'length': len(blockchain.chain),
