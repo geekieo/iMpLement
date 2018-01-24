@@ -204,7 +204,7 @@ class Blockchain(object):
 
 '''
 Blockchain API
-描述：使用 flask web 微框架，让我们容易将端口映射到 python 函数的框架，
+描述：使用 flask web 微框架，让我们将端口映射到 python 函数的框架，
 让我们同我们的区块链通过 web 的 http 请求来通讯.
 目标:将一个 server 在区块链网络里成为一个单独节点。
 
@@ -255,7 +255,7 @@ def mine():
         'transactions': block['transactions'],
         'proof': block['proof'],
         'previous_hash': block['previous_hash'],
-    }
+    } 
     return jsonify(response), 200
 
 
@@ -335,4 +335,11 @@ def consensus():
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+    from argparse import ArgumentParser
+
+    parser = ArgumentParser()
+    parser.add_argument('-p', '--port', default=5000, type=int, help='port to listen on')
+    args = parser.parse_args()
+    port = args.port
+
+    app.run(host='0.0.0.0', port = port)
