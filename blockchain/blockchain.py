@@ -2,6 +2,7 @@ import hashlib
 import json
 from time import time
 from uuid import uuid4
+from urllib.parse import urlparse
 
 from flask import Flask, jsonify, request
 
@@ -9,10 +10,11 @@ class Blockchain(object):
 	def __init__(self):
 		self.chain = []
 		self.current_transactions = []
-		
+
 		# 创建起源区块
 		self.new_block(previous_hash = 1, proof = 100)
-
+		
+		self.nodes = set()
 
 	def new_block(self, proof, previous_hash = None):
 		"""
@@ -121,6 +123,22 @@ class Blockchain(object):
 		guess_hash = hashlib.sha256(guess).hexdigest()
 		return guess_hash[:4] == "0000"
 
+	"""
+	达成共识
+	"""
+	def register_node(self, address): 
+		"""
+        添加新节点到节点列表中
+		网络上的每个节点都应该保存其他节点的登记信息。这样的话我们需要更多的http请求节点：
+			1./nodes/register 通过url接收一系列的新节点
+			2./nodes/resolve 实现我们的共识算法，解决冲突－－确保每个节点都有正确的链条
+        
+		:param address: <str> Address of node. Eg. 'http://192.168.0.5:5000'
+        :return: None
+        """
+		parsed_url = urlparse(address)
+		self.nodes.add(parsed_url.netloc)
+
 
 '''
 Blockchain API
@@ -184,6 +202,9 @@ def new_transaction():
 	'''
 	交易节点
 	接收post请求，因为我们要给它发数据
+
+	这是一次交易看起来的样子，用户发给server下面的数据：
+	{ “sender”: “my address”, “recipient”: “someone else’s address”, “amount”: 5 }
 	'''
 	values = request.get_json()
 	
