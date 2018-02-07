@@ -78,8 +78,9 @@ def splitDataSet(dataSet, axis, node):
 
 def chooseBestFeatureToSplit(dataSet):
     '''
-    description：找出使分类结果熵最大的特征分量，选择决策层的核心算法
-    parameter：[特征分量,label]
+    description：以某个特征分量为根结点，标签为分支条件/最终结点。
+                找出使分类结果熵减（增益）最大的特征分量。选择决策层的核心算法。
+    parameter：[特征分量,label]；
     loop: 
         特征分量，对每个结点统计其特征样本集label的熵，对所有结点做加权和
         计算信息增益（熵差），baseEntropy - 特征分量结点加权Entropy，保留增益最大的特征分量的列索引
@@ -94,14 +95,15 @@ def chooseBestFeatureToSplit(dataSet):
         #1 创建唯一的特征分量列表
         featList = [example[i] for example in dataSet]  #提取全部数据集的第i列元素
         uniqueNodes = set(featList)  # 分支结点，特征分量的结点类型
-
+ 
         newEntropy = 0.0
         #2 遍历结点类型，计算的加权信息熵
         for node in uniqueNodes:
             subDataSet = splitDataSet(dataSet, i, node)
             prob = len(subDataSet) / float(len(dataSet))  #结点权重
-            newEntropy += prob * calcShannonEnt(
-                subDataSet)  #结点信息熵加权和，同类有序，分类减熵，加权和不会大过原始熵
+            # 熵 = 各子结点信息熵加权和。若分支类别比较纯，总熵低，熵减，（原始熵和它做差）增益大；若分支类别还是很多，总熵高，熵增，增益小，且可能为负。
+            # 熵函数两端都属于低熵，类别纯；越到中间部分熵越高，类混杂；不同类的比例越均匀，信息熵越大。
+            newEntropy += prob * calcShannonEnt(subDataSet)
         infoGain = baseEntropy - newEntropy  #信息增益
         if (infoGain > bestInfoGain):
             #3 记录最大的信息增益，及对应的特征分量索引
