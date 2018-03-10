@@ -96,6 +96,9 @@ ENV/
 # Rope project settings
 .ropeproject
 
+# idea configuration file
+.idea
+
 # mkdocs documentation
 /site
 cv/Simple-OpenCV-Calculator/gestures
