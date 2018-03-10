@@ -102,3 +102,7 @@ ENV/
 # mkdocs documentation
 /site
 cv/Simple-OpenCV-Calculator/gestures
+cv/Simple-OpenCV-Calculator/train_images
+cv/Simple-OpenCV-Calculator/test_images
+cv/Simple-OpenCV-Calculator/test_labels
+cv/Simple-OpenCV-Calculator/train_labels
