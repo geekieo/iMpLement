@@ -74,4 +74,4 @@ enter \'q\' to exit:\n'%count)
 
 if __name__ =="__main__":
     #task('go')
-    userInterface();
+    userInterface()
