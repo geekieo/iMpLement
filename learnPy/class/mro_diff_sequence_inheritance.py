@@ -14,4 +14,4 @@ class E(C, D):
     pass
 
 if __name__ == '__main__':
-    print(E.__mro__)
+    print(E.__mro__) 
