@@ -55,15 +55,22 @@ def task(message):
         c.pause()
         d.pause()
         e.pause()
+    else:
+        return False
+    return True
 
 def userInterface():
-    while 1:
-        message = input('enter \'go\' \'stop\' \'pause\' to run test, enter \'q\' to exit:\r\n')
+    count = 5 #无效输入计数器
+    while count>0:
+        message = input('\n\
+enter \'go\' \'stop\' \'pause\' to run test,\n\
+you have %d times to enter incorrect command,\n\
+enter \'q\' to exit:\n'%count)
         if message =='q':
             break
         else:
-            task(message)
-
+            if not task(message):
+                count -= 1
 
 if __name__ =="__main__":
     userInterface();
