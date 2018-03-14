@@ -49,7 +49,7 @@ find = False  #递归跳出标记，需局部修改
 dst_index = 7  #目标位置，不用局部修改
 
 
-def __main__():
+if __name__ == "__main__":
     #x = [5, 4, 3, 9, 7, 8, 2, 1, 3]
     x = [5, 4, 3, 7, 8, 2, 1, 3]
     #x=[6,6,3,4,4,4,4,5,1,1,1]
@@ -57,6 +57,3 @@ def __main__():
     #此处需入参范围校验
     quick_search(x, 0, length - 1)
     print(x[dst_index])
-
-
-__main__()
