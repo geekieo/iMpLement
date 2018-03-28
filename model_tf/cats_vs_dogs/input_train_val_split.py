@@ -44,6 +44,7 @@ def get_files(file_dir, ratio):
     label_dogs = []
     # analysis filename, split positive and negative samples
     with open(file_dir) as file:
+    for file in os.listdir(file_dir):
         name = file.split(sep='.')
         if name[0] == 'cat':
             cats.append(file_dir+file)
@@ -51,7 +52,7 @@ def get_files(file_dir, ratio):
             dogs.append(file_dir+file)
     label_cats = [0]*len(cats) #label_cats=[0 for _ in range(len(cats))]
     label_dogs = [1]*len(dogs)
-    print('There are %d cats\nThere are %d dogs'%len(cats),len(dogs))
+    print('There are %d cats\nThere are %d dogs'%(len(cats),len(dogs)))
 
     # use numpy to split samples at random
     image_list = np.hstack((cats,dogs))
