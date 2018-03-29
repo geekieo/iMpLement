@@ -30,10 +30,10 @@ import math
 # you need to change this to your data directory
 train_dir = "D://Documents//PySpace//dataset//cats_vs_dogs//train//"
 
-def get_files(file_dir, ratio):
+def get_files(path, ratio):
     """
     Args:
-        file_dir: file directory
+        path: file directory
         ratio: ratio of validation set in train set
     Return:
         list of images directory and labels
@@ -42,14 +42,17 @@ def get_files(file_dir, ratio):
     label_cats = []
     dogs = []
     label_dogs = []
-    # analysis filename, split positive and negative samples
-    with open(file_dir) as file:
-    for file in os.listdir(file_dir):
-        name = file.split(sep='.')
-        if name[0] == 'cat':
-            cats.append(file_dir+file)
-        else:
-            dogs.append(file_dir+file)
+    # analysis filename, split positive and negative samples 
+    # for file in os.listdir(path):
+    #     name = file.split(sep='.')
+    #     if name[0] == 'cat':
+    #         #cats.append(path+file)
+    #         cats.append(os.path.join(path, file))
+    #     elif name[0] == 'dog':
+    #         #dogs.append(path+file)
+    #         dogs.append(os.path.join(path, file))
+    split_samples(train_dir, cats, dogs)
+
     label_cats = [0]*len(cats) #label_cats=[0 for _ in range(len(cats))]
     label_dogs = [1]*len(dogs)
     print('There are %d cats\nThere are %d dogs'%(len(cats),len(dogs)))
@@ -75,6 +78,30 @@ def get_files(file_dir, ratio):
     val_images = ran_label_list[n_tra:]
 
     return tra_images,tra_labels,val_images,val_images
+
+
+def split_samples(path, cats, dogs):
+    """
+    Args:
+        path: path of folders
+        cats: path of cat files
+        dogs: path of dog files
+    Return:
+        list of cat or dog files in folder and subfolder
+    """
+    for file in os.listdir(path):
+        file_path = os.path.join(path,file) # maybe a file, maybe a folder
+        if os.path.isdir(file_path):
+            split_samples(file_path, cats, dogs) # if file_path is a path of folder
+        else:
+            name = file.split(sep='.') # anlysis filename
+            if name[0] == 'cat':
+                #cats.append(path+file)
+                cats.append(os.path.join(path, file))
+            elif name[0] == 'dog':
+                #dogs.append(path+file)
+                dogs.append(os.path.join(path, file))
+
 
 if __name__ == "__main__":
     tra_images,tra_labels,val_images,val_image=get_files(train_dir,0.2)
