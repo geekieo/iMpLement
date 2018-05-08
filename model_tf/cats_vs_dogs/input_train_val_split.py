@@ -129,33 +129,43 @@ def get_batch(image, label, image_W, image_H, batch_size, capacity):
     # if image dir is not randomized use tf.train.shuffle_batch()
     image_batch, label_batch = tf.train.batch([image, label],
                                               batch_size=batch_size,
-                                              num_threads=64,
+                                              num_threads=8,
                                               capacity=capacity)
     label_batch = tf.reshape(label_batch,[batch_size])
     return image_batch, label_batch
 
 
 #%% TEST
-
-import matplotlib.pyplot as plt
-
-BATCH_SIZE = 2
-CAPACITY = 256
-IMG_H = 208
-IMG_W = 208
-train_dir = "D://Documents//PySpace//dataset//cats_vs_dogs//train//"
-tra_images, tra_labels, val_images, val_images = input.get_files(train_dir,RATIO=0.2)
-image_batch, label_batch = get_batch(tra_images,tra_labels,IMG_W,IMG_H,BATCH_SIZE,CAPACITY)
-
-with tf.Session() as sess:
-    i = 0
-    coord = tf.train.Coordinator()  # in queue
-    threads = tf.train.start_queue_runners(coord=coord) # out queue
-    try:
-        while not coord.should_stop() and i<1
-
-
-
-
 if __name__ == "__main__":
-    tra_images, tra_labels, val_images, val_image = get_files(train_dir, 0.2)
+        
+    import matplotlib.pyplot as plt
+
+    BATCH_SIZE = 2
+    CAPACITY = 256
+    IMG_H = 208
+    IMG_W = 208
+    train_dir = "D://Documents//PySpace//dataset//cats_vs_dogs//train//"
+
+    tra_images, tra_labels, val_images, val_images = input.get_files(train_dir,RATIO=0.2)
+    image_batch, label_batch = get_batch(tra_images,tra_labels,IMG_W,IMG_H,BATCH_SIZE,CAPACITY)
+
+    with tf.Session() as sess:
+        i = 0
+        coord = tf.train.Coordinator()  # inqueue
+        threads = tf.train.start_queue_runners(coord=coord) # dequeue
+        try:
+            while not coord.should_stop() and i<1:
+                img, label = sess.rum([image_batch, label_batch])
+
+                # just test one batch
+                for i in np.arange(BATCH_SIZE):
+                    print('label:%d'%label[j])
+                    plt.imshow(img[j,:,:,:])
+                    plt.show()
+                i+=1
+        
+        except tf.errors.OutOfRangeError:
+            print('done!')
+        finally:
+            coord.request_stop()
+        coord.join(threads)
