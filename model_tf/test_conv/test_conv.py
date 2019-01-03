@@ -54,11 +54,11 @@
              [[96, 88],
               [88, 88]]]]  shape=(1,5,2,2)  #BCHW
 结果分析:
-  conv 运算图解为:
-      x1┐      ┌f0 ┌f1 ┌f2 ┌f3 ┌f4
+    conv 运算图解为:
+        x1┐      ┌f0 ┌f1 ┌f2 ┌f3 ┌f4
         ├ conv ┤   ┤   ┤   ┤   ┤   → x1©f0+x2©f5 x1©f1+x2©f6 ... = y1 y2 y3 y4 y5
-      x2┘      └f5 └f6 └f7 └f8 └f9  
-  其中, © 表示二维卷积操作
+        x2┘      └f5 └f6 └f7 └f8 └f9  
+    其中, © 表示二维卷积操作
 """
 import tensorflow as tf
 
