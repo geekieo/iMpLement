@@ -1,10 +1,7 @@
-import os
-import sys
 import logging
 
 class Logger:
     def __init__(self, name, filename):
-
         # 创建名为 spam_application 的记录器
         self.logger = logging.getLogger(name)
         self.logger.setLevel(logging.DEBUG)
