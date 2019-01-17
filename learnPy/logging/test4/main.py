@@ -9,5 +9,5 @@ logger = logging.logger
 logger.info('main 收到一个请求')
 
 foo.foo()
-print(logging.fh.baseFilename)
+print(logging.th.baseFilename)
 print(logger.name)
