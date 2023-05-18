@@ -23,7 +23,7 @@ def find_inflection(a, b, inflection_flag):
 if __name__ == "__main__":
     captial_peryear =  0.68
     captial_once = 9.976
-    rate = 1.05 # 年增长率以年通胀率为参考。增长率越高拐点越晚出现。。增长率达到 1.06，拐点消失。
+    rate = 1.05 # 年增长率以年通胀率为参考。增长率越高拐点越晚出现。增长率达到 1.06，拐点消失。
     inflection_flag = True # 寻找拐点标记
     peryear_final = captial_peryear
     once_final = captial_once
