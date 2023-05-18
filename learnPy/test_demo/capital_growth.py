@@ -1,5 +1,5 @@
 
-# 总奖金 20.4。领取方案一：每年取0.68,取30年。领取方案二：一次性取9.976。
+# 总奖金 20.4。领取方案一：每年取0.68,取30年。领取方案二：一次性取9.976。奖金作为投资本金，每年有一定比例的增长，计算两种方案在n年后的资金总量。
 def growth(captial, capital_increase=True, rate=1.04, year=30):
     if year <= 1:
         return captial
@@ -7,11 +7,11 @@ def growth(captial, capital_increase=True, rate=1.04, year=30):
     cumulative_captial = captial
     if capital_increase:
         for i in range(year-1):
-            cumulative_captial += (cumulative_captial + captial) * rate
+            cumulative_captial = (cumulative_captial + captial) * rate
     else:
         for i in range(year-1):
-            cumulative_captial += cumulative_captial * rate
-        # cumulative_captial = captial * rate ** year      
+            cumulative_captial = cumulative_captial * rate
+        # cumulative_captial = captial * （rate ** year)
     return cumulative_captial
 
 if __name__ == "__main__":
