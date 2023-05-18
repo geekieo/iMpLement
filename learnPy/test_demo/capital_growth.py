@@ -28,10 +28,10 @@ if __name__ == "__main__":
     peryear_final = captial_peryear
     once_final = captial_once
     for year in range(1, 30):
-        peryear_final = growth(captial=captial_peryear, inc_captial=captial_peryear, rate=rate, year=year)
-        once_final = growth(captial=captial_once, inc_captial=0, rate=rate, year=year)
-        # peryear_final = growth_peryear(peryear_final, captial_peryear, rate)
-        # once_final = growth_peryear(once_final, 0, rate)
+        # peryear_final = growth(captial=captial_peryear, inc_captial=captial_peryear, rate=rate, year=year)
+        # once_final = growth(captial=captial_once, inc_captial=0, rate=rate, year=year)
+        peryear_final = growth_peryear(peryear_final, captial_peryear, rate)
+        once_final = growth_peryear(once_final, 0, rate)
         print("每年循环增资{0}，年增长率{1}，{2}年后：{3:.2f}".format(captial_peryear, rate, year, peryear_final), end="\t")
         print("一次性投资{0}，年增长率{1}，{2}年后：{3:.2f}".format(captial_once, rate, year, once_final), end="\t")
         if find_inflection(peryear_final, once_final, inflection_flag):
