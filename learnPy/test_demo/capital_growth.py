@@ -11,7 +11,7 @@ def growth(captial=0, inc_captial=0, rate=1.04, year=30):
         cumulative_captial = cumulative_captial  * rate + inc_captial
     return cumulative_captial
 
-def growth_peryear(cumulative_captial=0, inc_captial=0, rate=1.04):
+def growth_peryear(cumulative_captial=0.0, inc_captial=0.0, rate=1.04):
         return cumulative_captial  * rate + inc_captial
 
 def find_inflection(a, b, inflection_flag):

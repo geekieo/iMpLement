@@ -31,7 +31,7 @@ def save_format_matrix(arr,file_name):
 					f.write("\n")
 
 def load_matrix(file_name):
-	return np.loadtxt(file_name,dtype=np.int,delimiter=",")
+	return np.loadtxt(file_name,dtype=int,delimiter=",")
 
 def load_original_model():
 	model_arr=[]
